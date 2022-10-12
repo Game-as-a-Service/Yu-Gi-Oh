@@ -3,7 +3,7 @@
 [![BGM](https://img.youtube.com/vi/i0ukpYVzeHs/0.jpg)](https://www.youtube.com/watch?v=i0ukpYVzeHs)
 
 ## 程式語言與框架
-* 前端待定
+* 前端待定，歡迎專家整碗端走
 * Java, Kotlin
 * Spring Framework
 * Redis for **Cache**
@@ -11,8 +11,8 @@
 
 ## Practice Stack
 * Event Storming & Example Mapping 會有的
-* 不過 TDD & ATDD 我暫時持保守態度，自己練習可以，如果寫程式不夠快，我覺得前置時間有點長，不一定適合團隊合作，但要寫測試我是肯定的 (我們可以第二次再來是也不錯
-* DDD 跟 CA 也是一樣，如果我們會一直重寫我們就會有機會越玩越多
+* 不過 TDD & ATDD 我暫時持保守態度，自己練習可以，如果寫測試的手速不夠快，我覺得前置時間有點長，不一定適合團隊合作，但要寫測試我是肯定的 (我們可以第二次再來是也不錯
+* DDD 跟 CA 也是一樣，有可能不會一次全玩到只帶到精神，但如果我們會一直重寫我們就會有機會越玩越多
 
 ## 期望推進方式
 * 我覺得能完成是最小的目標
