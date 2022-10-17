@@ -18,7 +18,7 @@
 ## Other
 * Unit Testing
 * Integration Testing
-* GitHub Flow
+* GitHub Flow (Issues, Pull requests, Projects)
 
 ## 期望推進方式
 * 我覺得能完成是最小的目標，但會透過 mob programming 來讓彼此的交流最大化
