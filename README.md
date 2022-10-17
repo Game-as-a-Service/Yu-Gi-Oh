@@ -3,19 +3,24 @@
 [![BGM](https://img.youtube.com/vi/i0ukpYVzeHs/0.jpg)](https://www.youtube.com/watch?v=i0ukpYVzeHs)
 
 ## 程式語言與框架
-* 前端待定，歡迎專家整碗端走
-* Java, Kotlin
-* Spring Framework
+* 前端待定，歡迎專家整碗端走，我覺得可能會再選一個負責的同學出來
+* JVM (Java, Kotlin)
+* Spring Framework or Quarkus or without these two
 * Redis for **Cache**
 * PostgreSQL for **RDB**
 
 ## Practice Stack
-* Event Storming & Example Mapping 會有的
-* 不過 TDD & ATDD 我暫時持保守態度，自己練習可以，如果寫測試的手速不夠快，我覺得前置時間有點長，不一定適合團隊合作，但要寫測試我是肯定的 (我們可以第二次再來是也不錯
-* DDD 跟 CA 也是一樣，有可能不會一次全玩到只帶到精神，但如果我們會一直重寫我們就會有機會越玩越多
+* Event Storming
+* Example Mapping
+* TDD & ATDD 前幾run沒有
+* DDD & CA 是漸進的，先帶精神後面在整個重構
+
+## Other
+* Unit Testing
+* Integration Testing
+* GitHub Flow
 
 ## 期望推進方式
-* 我覺得能完成是最小的目標
+* 我覺得能完成是最小的目標，但會透過 mob programming 來讓彼此的交流最大化
 * 所以想要很簡單的先做完一遍，透過不斷地重新設計跟重做讓他越來越好
 * 舉例來說一開始只會有很少量的怪獸、魔法、陷阱卡，方法論取大家共識，我也不算熟，大家一起互相學習
-* 開發技巧的話我們就透過 mob programming 一起學習
