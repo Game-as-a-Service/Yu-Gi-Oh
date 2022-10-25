@@ -15,6 +15,12 @@
 * TDD & ATDD 前幾run沒有
 * DDD & CA 是漸進的，先帶精神後面在整個重構
 
+## 細的技術選擇議題
+* HTTP
+* Server-Sent Event
+* WebSocket
+* Blocking or Non-Blocking
+
 ## Other
 * Unit Testing
 * Integration Testing
@@ -24,6 +30,7 @@
 * 我覺得能完成是最小的目標，但會透過 mob programming 來讓彼此的交流最大化
 * 所以想要很簡單的先做完一遍，透過不斷地重新設計跟重做讓他越來越好
 * 舉例來說一開始只會有很少量的怪獸、魔法、陷阱卡，方法論取大家共識，我也不算熟，大家一起互相學習
+* 也希望可以讓平常只寫CRUD的朋友們玩到一些不同的技術，對之後工作上有幫助
 
 ## 影片
 * https://youtu.be/QL-o7Xp_4bo
