@@ -1,9 +1,9 @@
 package com.example.service;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.data.dao.MemberRepository;
 import com.example.data.dto.req.AuthDto;
 import com.example.data.po.MemberPo;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,12 +12,9 @@ import java.util.Optional;
 @Service
 public class MemberService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final MemberRepository memberRepository;
 
-    public MemberService(BCryptPasswordEncoder bCryptPasswordEncoder, MemberRepository memberRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
@@ -32,7 +29,7 @@ public class MemberService {
                             MemberPo
                                     .builder()
                                     .userId(authDto.getUserId())
-                                    .passwordHash(bCryptPasswordEncoder.encode(authDto.getPassword()))
+                                    .passwordHash(BCrypt.withDefaults().hashToString(12, authDto.getPassword().toCharArray()))
                                     .build()
                     );
             return true;

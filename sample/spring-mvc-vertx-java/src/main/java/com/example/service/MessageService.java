@@ -1,5 +1,6 @@
 package com.example.service;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.config.Constant;
 import com.example.data.dao.MemberRepository;
 import com.example.data.dao.MessageRepository;
@@ -15,7 +16,6 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.ServerWebSocket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -32,23 +32,10 @@ public class MessageService {
                     .newBuilder()
                     .initialCapacity(1024)
                     .build();
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final Cache<String, ServerWebSocket> userIdToSession =
-            Caffeine
-                    .newBuilder()
-                    .initialCapacity(1024)
-                    .expireAfterAccess(Duration.ofSeconds(35))
-                    .evictionListener((RemovalListener<String, ServerWebSocket>) (userId, session, removalCause) -> {
-                        if (null != session) {
-                            cleanSession(session, "Evict");
-                        }
-                    })
-                    .build();
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
 
-    public MessageService(BCryptPasswordEncoder bCryptPasswordEncoder, MemberRepository memberRepository, MessageRepository messageRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public MessageService(MemberRepository memberRepository, MessageRepository messageRepository) {
         this.memberRepository = memberRepository;
         this.messageRepository = messageRepository;
     }
@@ -66,6 +53,18 @@ public class MessageService {
                         }
                 );
     }
+
+    private final Cache<String, ServerWebSocket> userIdToSession =
+            Caffeine
+                    .newBuilder()
+                    .initialCapacity(1024)
+                    .expireAfterAccess(Duration.ofSeconds(35))
+                    .evictionListener((RemovalListener<String, ServerWebSocket>) (userId, session, removalCause) -> {
+                        if (null != session) {
+                            cleanSession(session, "Evict");
+                        }
+                    })
+                    .build();
 
     public void handleMsg(ServerWebSocket session, String message) {
         try {
@@ -95,7 +94,7 @@ public class MessageService {
         final Optional<MemberPo> memberPoOpt = memberRepository.findByUserId(protocol.getUserId());
 
         if (memberPoOpt.isPresent() &&
-                bCryptPasswordEncoder.matches(protocol.getContent(), memberPoOpt.get().getPasswordHash())) {
+                BCrypt.verifyer().verify(protocol.getContent().toCharArray(), memberPoOpt.get().getPasswordHash().toCharArray()).verified) {
             userIdToSession.put(protocol.getUserId(), session);
             remoteAddressToUserId.put(session.remoteAddress().toString(), protocol.getUserId());
             session.write(Buffer.buffer(String.format("%s%s", objectMapper.writeValueAsString(Protocol.builder().action(Action.ACK_AUTH).userId(protocol.getUserId()).build()), Constant.CR)));
@@ -107,15 +106,16 @@ public class MessageService {
     private void handleCmd(Protocol protocol, ServerWebSocket session) {
         accessForPreventingExpire(session);
 
-        messageRepository.save(
-                MessagePo
-                        .builder()
-                        .action(protocol.getAction().name())
-                        .userId(protocol.getUserId())
-                        .content(protocol.getContent())
-                        .createDate(Instant.now().toEpochMilli())
-                        .build()
-        );
+        messageRepository
+                .save(
+                        MessagePo
+                                .builder()
+                                .action(protocol.getAction().name())
+                                .userId(protocol.getUserId())
+                                .content(protocol.getContent())
+                                .createDate(Instant.now().toEpochMilli())
+                                .build()
+                );
     }
 
     public void cleanSession(ServerWebSocket session, String reason) {
