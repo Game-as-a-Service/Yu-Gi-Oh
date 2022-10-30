@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: spring-flux-vertx-java
+  profiles:
+    active: ide
+  webflux:
+    base-path: /${spring.application.name}
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: ide
+  redis:
+    host: localhost
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: rootroot
+core:
+  domain: localhost
+  port: 8888
+
+

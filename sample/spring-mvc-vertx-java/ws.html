@@ -1,0 +1,47 @@
+<html>
+<head><title>Web Socket Test</title></head>
+<body>
+<script>
+    let socket;
+    if (window.WebSocket) {
+        socket = new WebSocket("ws://localhost:8888");
+        socket.onmessage = function (event) {
+            event.data.text()
+                .then(data => {
+                    console.log(data);
+                    if (JSON.parse(data).action === "HEARTBEAT") {
+                        socket.send(JSON.stringify({"action": "ACK_HEARTBEAT", "userId": "1", "content": ""}))
+                        socket.send("\r\n");
+                    }
+                });
+        }
+        socket.onopen = function (event) {
+            alert("Web Socket opened!");
+            socket.send(JSON.stringify({"action": "AUTH", "userId": "1", "content": "abc123"}))
+            socket.send("\r\n");
+        };
+        socket.onclose = function (event) {
+            alert("Web Socket closed.");
+        };
+    } else {
+        alert("Your browser does not support Websockets. (Use Chrome)");
+    }
+
+    function send(message) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({"action": "CMD", "userId": "1", "content": message}))
+            socket.send("\r\n");
+        } else {
+            alert("The socket is not open.");
+        }
+    }
+</script>
+<form onsubmit="return false;">
+    <input name="message" type="text" value="message"/>
+    <input onclick="send(this.form.message.value)" type="button" value="Send Web Socket Data"/>
+</form>
+</body>
+</html>
