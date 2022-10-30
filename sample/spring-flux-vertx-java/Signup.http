@@ -3,6 +3,6 @@ POST http://localhost:8080/spring-flux-vertx-java/api/v1.0/members/auth
 Content-Type: application/json
 
 {
-  "userId": "1",
+  "userId": "7",
   "password": "abc123"
 }

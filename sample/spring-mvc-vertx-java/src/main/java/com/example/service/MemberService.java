@@ -6,6 +6,7 @@ import com.example.data.dto.req.AuthDto;
 import com.example.data.po.MemberPo;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 
 
@@ -30,6 +31,7 @@ public class MemberService {
                                     .builder()
                                     .userId(authDto.getUserId())
                                     .passwordHash(BCrypt.withDefaults().hashToString(12, authDto.getPassword().toCharArray()))
+                                    .createDate(Instant.now().toEpochMilli())
                                     .build()
                     );
             return true;
