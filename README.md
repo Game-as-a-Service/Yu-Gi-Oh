@@ -1,6 +1,8 @@
 # Yu-Gi-Oh!
 
-[![BGM](https://img.youtube.com/vi/i0ukpYVzeHs/0.jpg)](https://www.youtube.com/watch?v=i0ukpYVzeHs)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=tXAWuvakMno" target="_blank">
+ <img src="http://img.youtube.com/vi/tXAWuvakMno/mqdefault.jpg" alt="Watch the video" />
+</a>
 
 ## 程式語言與框架
 * 前端待定，歡迎專家整碗端走，我覺得可能會再選一個負責的同學出來
@@ -12,8 +14,9 @@
 ## Practice Stack
 * Event Storming
 * Example Mapping
+* OOAD
 * TDD & ATDD 前幾run沒有
-* DDD & CA 是漸進的，先帶精神後面在整個重構
+* DDD & CA 是漸進的，先帶精神後面再整個重構
 
 ## 細的技術選擇議題
 * HTTP
