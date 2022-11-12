@@ -1,8 +1,5 @@
 # Yu-Gi-Oh!
-
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=tXAWuvakMno" target="_blank">
- <img src="http://img.youtube.com/vi/tXAWuvakMno/mqdefault.jpg" alt="Watch the video" />
-</a>
+[![BGM](https://img.youtube.com/vi/tXAWuvakMno/0.jpg)](https://www.youtube.com/watch?v=tXAWuvakMno)
 
 ## 程式語言與框架
 * 前端待定，歡迎專家整碗端走，我覺得可能會再選一個負責的同學出來
@@ -20,9 +17,9 @@
 
 ## 細的技術選擇議題
 * HTTP
-* Server-Sent Event
-* WebSocket
-* Blocking or Non-Blocking
+* Server-Sent Event, WebSocket
+* Blocking, Non-Blocking
+* NoSQL, SQL
 
 ## Other
 * Unit Testing
@@ -36,5 +33,6 @@
 * 也希望可以讓平常只寫CRUD的朋友們玩到一些不同的技術，對之後工作上有幫助
 
 ## 影片
-* https://youtu.be/QL-o7Xp_4bo
-* https://youtu.be/HZFNxIcTyQM
+* 1. https://youtu.be/QL-o7Xp_4bo
+* 2. 忘記了，大家下次記得提醒偶
+* 3. https://youtu.be/HZFNxIcTyQM
