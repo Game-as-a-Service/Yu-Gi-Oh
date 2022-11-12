@@ -33,6 +33,6 @@
 * 也希望可以讓平常只寫CRUD的朋友們玩到一些不同的技術，對之後工作上有幫助
 
 ## 影片
-* 1. https://youtu.be/QL-o7Xp_4bo
-* 2. 忘記了，大家下次記得提醒偶
-* 3. https://youtu.be/HZFNxIcTyQM
+1. https://youtu.be/QL-o7Xp_4bo
+2. 忘記了，大家下次記得提醒偶
+3. https://youtu.be/HZFNxIcTyQM
