@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DuelField {
+public class Cards {
 
-    // 左邊場地
-    private Zone left;
-    // 右邊場地
-    private Zone right;
+    // 上限
+    private Integer limit;
+    // 元素
+    private List<Card> elements;
 }

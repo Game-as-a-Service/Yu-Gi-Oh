@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import tw.gaas.yugioh.domain.enu.TrapType;
 
 @SuperBuilder
 @Data
@@ -11,4 +12,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class TrapCard extends Card {
 
+    // 陷阱卡類型
+    private TrapType trapType;
 }

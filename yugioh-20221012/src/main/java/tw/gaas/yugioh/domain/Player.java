@@ -5,16 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Duel {
+public class Player {
 
     // 名稱
     private String name;
+    // 生命值
+    private Integer lp;
     // 手牌
-    private List<Card> hand;
+    private Cards hand;
 }

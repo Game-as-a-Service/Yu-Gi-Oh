@@ -6,14 +6,15 @@ data class KDuelField(
 )
 
 data class KZone(
-    val duel: KDuel,
-    val mainMonster: List<KCard>,
-    val spellAndTrap: List<KCard>,
-    val graveYard: List<KCard>,
-    val deck: List<Card>,
+    val duel: KPlayer,
+    val mainMonster: KCards,
+    val spellAndTrap: KCards,
+    val graveYard: KCards,
+    val deck: KCards,
 )
 
-data class KDuel(
+data class KPlayer(
     val name: String,
-    val hand: List<KCard>,
+    val lp: Int,
+    val hand: KCards,
 )
