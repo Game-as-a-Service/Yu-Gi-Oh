@@ -20,9 +20,14 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
+    implementation("com.github.PureFuncInc:emoji-jvm-string:1.5.1")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-web")
