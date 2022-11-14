@@ -1,4 +1,4 @@
-package tw.gaas.yugioh.domain.enu;
+package tw.gaas.yugioh.domain.card.enu;
 
 public enum MonsterType {
 

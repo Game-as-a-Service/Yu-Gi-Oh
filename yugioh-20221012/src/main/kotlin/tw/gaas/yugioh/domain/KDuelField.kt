@@ -1,5 +1,7 @@
 package tw.gaas.yugioh.domain
 
+import tw.gaas.yugioh.domain.card.KCards
+
 data class KDuelField(
     val left: KZone,
     val right: KZone,

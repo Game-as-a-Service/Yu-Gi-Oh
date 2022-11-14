@@ -1,4 +1,4 @@
-package tw.gaas.yugioh.domain;
+package tw.gaas.yugioh.domain.card;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
