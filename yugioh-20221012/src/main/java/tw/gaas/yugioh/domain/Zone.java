@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import tw.gaas.yugioh.domain.card.Cards;
 
 @Builder
 @Data
@@ -13,14 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 public class Zone {
 
-    // 決鬥者
-    private Duel duel;
+    // 玩家
+    private Player player;
     // 主要怪獸區
-    private List<Card> mainMonster;
+    private Cards mainMonster;
     // 魔法陷阱區
-    private List<Card> spellAndTrap;
+    private Cards spellAndTrap;
     // 墓地
-    private List<Card> graveYard;
+    private Cards graveYard;
     // 牌堆
-    private List<Card> deck;
+    private Cards deck;
 }

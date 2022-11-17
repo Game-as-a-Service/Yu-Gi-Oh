@@ -1,0 +1,5 @@
+### Java status endpoint
+GET http://localhost:8080/java/api/v1.0/status
+
+### Kotlin status endpoint
+GET http://localhost:8080/kotlin/api/v1.0/status
