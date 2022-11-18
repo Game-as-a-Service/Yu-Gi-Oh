@@ -1,19 +1,11 @@
 package tw.gaas.yugioh.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import tw.gaas.yugioh.domain.card.Cards;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Zone {
 
     // 玩家
-    private Player player;
+    private Duelist duelist;
     // 主要怪獸區
     private Cards mainMonster;
     // 魔法陷阱區

@@ -1,16 +1,8 @@
 package tw.gaas.yugioh.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import tw.gaas.yugioh.domain.card.Cards;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Player {
+public class Duelist {
 
     // 名稱
     private String name;
