@@ -12,11 +12,6 @@ open class KCard(
     protected open val description: String,
 )
 
-data class KCards(
-    val limit: Int,
-    val elements: List<KCard>,
-)
-
 data class KMonsterCard(
     val attribute: Attribute,
     val monsterType: MonsterType,

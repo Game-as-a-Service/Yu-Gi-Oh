@@ -1,8 +1,12 @@
 package tw.gaas.yugioh.domain.card;
 
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 import tw.gaas.yugioh.domain.card.enu.Type;
 
-abstract class Card {
+@SuperBuilder
+@ToString
+public abstract class Card {
 
     // 名稱
     protected String name;
@@ -10,4 +14,6 @@ abstract class Card {
     protected Type type;
     // 描述
     protected String description;
+
+    public abstract Card copy();
 }
