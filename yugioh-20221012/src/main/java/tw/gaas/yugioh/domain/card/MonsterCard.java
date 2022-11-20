@@ -5,6 +5,7 @@ import lombok.experimental.SuperBuilder;
 import tw.gaas.yugioh.domain.card.enu.Attribute;
 import tw.gaas.yugioh.domain.card.enu.MonsterType;
 import tw.gaas.yugioh.domain.card.enu.Type;
+import tw.gaas.yugioh.domain.dto.CardDto;
 
 @SuperBuilder
 @ToString(callSuper = true)
@@ -43,6 +44,23 @@ public class MonsterCard extends Card {
                 .description(description)
                 .attribute(attribute)
                 .monsterType(monsterType)
+                .rank(rank)
+                .attack(attack)
+                .defense(defense)
+                .build();
+    }
+
+    @Override
+    public CardDto toDto() {
+        return CardDto
+                .builder()
+                .name(name)
+                .type(type)
+                .description(description)
+                .attribute(attribute)
+                .monsterType(monsterType)
+                .spellType(null)
+                .trapType(null)
                 .rank(rank)
                 .attack(attack)
                 .defense(defense)

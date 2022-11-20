@@ -1,5 +1,6 @@
 package tw.gaas.yugioh.manager;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -58,6 +59,12 @@ public class GameManager {
                         Optional
                                 .ofNullable(gameUuidAndSseEmitters.get(gameUuid))
                                 .ifPresent(emitters -> {
+                                    try {
+                                        log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(duelField.toDto()));
+                                    } catch (JsonProcessingException ex) {
+                                        log.error(ex.getMessage(), ex);
+                                    }
+
                                     emitters.forEach(e -> {
                                         try {
                                             e.send(
@@ -65,7 +72,7 @@ public class GameManager {
                                                             .event()
                                                             .id(OffsetDateTime.now().toString())
                                                             .name(String.format("Game:%s", gameUuid))
-                                                            .data(duelField.toString())
+                                                            .data(objectMapper.writeValueAsString(duelField.toDto()))
                                             );
                                         } catch (IOException ex) {
                                             log.error(ex.getMessage(), ex);

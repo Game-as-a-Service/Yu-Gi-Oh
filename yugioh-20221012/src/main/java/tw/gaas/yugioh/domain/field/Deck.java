@@ -5,11 +5,13 @@ import tw.gaas.yugioh.domain.card.Card;
 import tw.gaas.yugioh.domain.card.MonsterCard;
 import tw.gaas.yugioh.domain.card.SpellCard;
 import tw.gaas.yugioh.domain.card.TrapCard;
+import tw.gaas.yugioh.domain.dto.DeckDto;
 
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @ToString(callSuper = true)
 public class Deck extends Cards {
@@ -32,5 +34,12 @@ public class Deck extends Cards {
 
     public Card draw() {
         return elements.poll();
+    }
+
+    public DeckDto toDto() {
+        return DeckDto
+                .builder()
+                .elements(elements.stream().map(Card::toDto).collect(Collectors.toList()))
+                .build();
     }
 }

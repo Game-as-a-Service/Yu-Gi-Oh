@@ -2,6 +2,8 @@ package tw.gaas.yugioh.domain.field;
 
 import lombok.ToString;
 import tw.gaas.yugioh.domain.card.enu.Phase;
+import tw.gaas.yugioh.domain.dto.DuelFieldDto;
+import tw.gaas.yugioh.domain.dto.ZoneDto;
 
 @ToString
 public class DuelField {
@@ -29,5 +31,20 @@ public class DuelField {
         left.setup();
         right.setup();
         this.phase = Phase.LEFT_DRAW;
+    }
+
+    public DuelFieldDto toDto() {
+        ZoneDto rightDto = null;
+        if (right != null) {
+            rightDto = right.toDto();
+        }
+
+        return DuelFieldDto
+                .builder()
+                .uuid(uuid)
+                .left(left.toDto())
+                .right(rightDto)
+                .phase(phase)
+                .build();
     }
 }

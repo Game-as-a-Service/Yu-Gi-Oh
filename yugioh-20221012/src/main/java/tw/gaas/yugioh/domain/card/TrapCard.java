@@ -4,6 +4,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import tw.gaas.yugioh.domain.card.enu.TrapType;
 import tw.gaas.yugioh.domain.card.enu.Type;
+import tw.gaas.yugioh.domain.dto.CardDto;
 
 @SuperBuilder
 @ToString(callSuper = true)
@@ -29,6 +30,23 @@ public class TrapCard extends Card {
                 .type(type)
                 .description(description)
                 .trapType(trapType)
+                .build();
+    }
+
+    @Override
+    public CardDto toDto() {
+        return CardDto
+                .builder()
+                .name(name)
+                .type(type)
+                .description(description)
+                .attribute(null)
+                .monsterType(null)
+                .spellType(null)
+                .trapType(trapType)
+                .rank(null)
+                .attack(null)
+                .defense(null)
                 .build();
     }
 }

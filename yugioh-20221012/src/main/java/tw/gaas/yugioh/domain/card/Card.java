@@ -3,6 +3,7 @@ package tw.gaas.yugioh.domain.card;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import tw.gaas.yugioh.domain.card.enu.Type;
+import tw.gaas.yugioh.domain.dto.CardDto;
 
 @SuperBuilder
 @ToString
@@ -16,4 +17,6 @@ public abstract class Card {
     protected String description;
 
     public abstract Card copy();
+
+    public abstract CardDto toDto();
 }

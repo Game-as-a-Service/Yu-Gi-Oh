@@ -1,6 +1,7 @@
 package tw.gaas.yugioh.domain.field;
 
 import lombok.ToString;
+import tw.gaas.yugioh.domain.dto.ZoneDto;
 
 @ToString
 public class Zone {
@@ -26,5 +27,16 @@ public class Zone {
 
     public void setup() {
         deck.drawFirstSixCards(duelist);
+    }
+
+    public ZoneDto toDto() {
+        return ZoneDto
+                .builder()
+                .duelist(duelist.toDto())
+                .monsterCards(monsterCards.toDto())
+                .spellAndTrapCards(spellAndTrapCards.toDto())
+                .graveYardCards(graveYardCards.toDto())
+                .deck(deck.toDto())
+                .build();
     }
 }
