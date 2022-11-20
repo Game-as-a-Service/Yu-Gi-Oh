@@ -17,18 +17,6 @@ public class Zone {
     // 牌堆
     private Deck deck;
 
-    public Zone(Duelist duelist) {
-        this.duelist = duelist;
-        this.monsterCards = new MonsterCards();
-        this.spellAndTrapCards = new SpellAndTrapCards();
-        this.graveYardCards = new GraveYardCards();
-        this.deck = new Deck();
-    }
-
-    public void setup() {
-        deck.drawFirstSixCards(duelist);
-    }
-
     public ZoneDto toDto() {
         return ZoneDto
                 .builder()

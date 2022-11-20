@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import tw.gaas.yugioh.domain.card.enu.Phase;
 import tw.gaas.yugioh.domain.field.DuelField;
-import tw.gaas.yugioh.domain.field.Zone;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -29,16 +29,15 @@ public class GameManager {
         return pairPool.poll();
     }
 
-    public String enterLeft(String gameUuid, DuelField duelField) {
-        gameUuidAndDuelField.put(gameUuid, duelField);
+    public String enterLeft(String gameUuid) {
+        gameUuidAndDuelField.put(gameUuid, new DuelField(gameUuid, Phase.INIT));
         pairPool.offer(gameUuid);
         return "curl -H \"Accept:text/event-stream\" http://localhost:8080/java/api/v1.0/games/" + gameUuid;
     }
 
-    public String enterRight(String pairGameUuid, Zone zone) {
+    public String enterRight(String pairGameUuid) {
         final DuelField duelField = gameUuidAndDuelField.get(pairGameUuid);
-        duelField.setRight(zone);
-        duelField.start();
+        duelField.setPhase(Phase.LEFT_DRAW);
         return "curl -H \"Accept:text/event-stream\" http://localhost:8080/java/api/v1.0/games/" + pairGameUuid;
     }
 

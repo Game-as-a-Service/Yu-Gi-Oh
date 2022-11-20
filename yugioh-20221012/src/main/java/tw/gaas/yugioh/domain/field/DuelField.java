@@ -17,20 +17,13 @@ public class DuelField {
     // 階段
     private Phase phase;
 
-    public DuelField(String uuid, Zone left, Phase phase) {
+    public DuelField(String uuid, Phase phase) {
         this.uuid = uuid;
-        this.left = left;
         this.phase = phase;
     }
 
-    public void setRight(Zone zone) {
-        this.right = zone;
-    }
-
-    public void start() {
-        left.setup();
-        right.setup();
-        this.phase = Phase.LEFT_DRAW;
+    public void setPhase(Phase phase) {
+        this.phase = phase;
     }
 
     public DuelFieldDto toDto() {

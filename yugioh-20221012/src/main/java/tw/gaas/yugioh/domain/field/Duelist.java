@@ -1,10 +1,7 @@
 package tw.gaas.yugioh.domain.field;
 
 import lombok.ToString;
-import tw.gaas.yugioh.domain.card.Card;
 import tw.gaas.yugioh.domain.dto.DuelistDto;
-
-import java.util.Arrays;
 
 @ToString
 public class Duelist {
@@ -15,16 +12,6 @@ public class Duelist {
     private Integer lp;
     // 手牌
     private HandCards handCards;
-
-    public Duelist(String name) {
-        this.name = name;
-        this.lp = 4000;
-        this.handCards = new HandCards();
-    }
-
-    public void drawFirstSixCards(Card... draw) {
-        Arrays.stream(draw).forEach(v -> handCards.elements.offer(v));
-    }
 
     public DuelistDto toDto() {
         return DuelistDto

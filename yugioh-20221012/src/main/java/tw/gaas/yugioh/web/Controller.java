@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import tw.gaas.yugioh.domain.card.enu.Phase;
-import tw.gaas.yugioh.domain.field.DuelField;
-import tw.gaas.yugioh.domain.field.Duelist;
-import tw.gaas.yugioh.domain.field.Zone;
 import tw.gaas.yugioh.manager.GameManager;
 
 import java.io.IOException;
@@ -40,16 +36,9 @@ public class Controller {
 
         if (pairGameUuid == null) {
             final String uuid = UUID.randomUUID().toString();
-            final Duelist duelist = new Duelist(username);
-            final Zone zone = new Zone(duelist);
-            final DuelField duelField = new DuelField(uuid, zone, Phase.INIT);
-
-            return gameManager.enterLeft(uuid, duelField);
+            return gameManager.enterLeft(uuid);
         } else {
-            final Duelist duelist = new Duelist(username);
-            final Zone zone = new Zone(duelist);
-
-            return gameManager.enterRight(pairGameUuid, zone);
+            return gameManager.enterRight(pairGameUuid);
         }
     }
 
