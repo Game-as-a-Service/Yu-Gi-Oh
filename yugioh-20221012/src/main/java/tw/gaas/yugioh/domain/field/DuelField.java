@@ -34,6 +34,11 @@ public class DuelField {
     }
 
     public DuelFieldDto toDto() {
+        ZoneDto leftDto = null;
+        if (left != null) {
+            leftDto = left.toDto();
+        }
+
         ZoneDto rightDto = null;
         if (right != null) {
             rightDto = right.toDto();
@@ -42,7 +47,7 @@ public class DuelField {
         return DuelFieldDto
                 .builder()
                 .uuid(uuid)
-                .left(left.toDto())
+                .left(leftDto)
                 .right(rightDto)
                 .phase(phase)
                 .build();

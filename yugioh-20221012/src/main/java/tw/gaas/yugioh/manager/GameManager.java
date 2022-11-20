@@ -60,7 +60,7 @@ public class GameManager {
                                 .ofNullable(gameUuidAndSseEmitters.get(gameUuid))
                                 .ifPresent(emitters -> {
                                     try {
-                                        log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(duelField.toDto()));
+                                        log.info("\n" + objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(duelField.toDto()));
                                     } catch (JsonProcessingException ex) {
                                         log.error(ex.getMessage(), ex);
                                     }
