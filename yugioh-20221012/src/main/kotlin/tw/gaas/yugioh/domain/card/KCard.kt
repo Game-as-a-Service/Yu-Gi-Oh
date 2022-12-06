@@ -1,10 +1,10 @@
 package tw.gaas.yugioh.domain.card
 
-import tw.gaas.yugioh.domain.card.enu.Attribute
-import tw.gaas.yugioh.domain.card.enu.MonsterType
-import tw.gaas.yugioh.domain.card.enu.SpellType
-import tw.gaas.yugioh.domain.card.enu.TrapType
-import tw.gaas.yugioh.domain.card.enu.Type
+import tw.gaas.yugioh.data.enu.Attribute
+import tw.gaas.yugioh.data.enu.MonsterType
+import tw.gaas.yugioh.data.enu.SpellType
+import tw.gaas.yugioh.data.enu.TrapType
+import tw.gaas.yugioh.data.enu.Type
 
 open class KCard(
     protected open val name: String,
