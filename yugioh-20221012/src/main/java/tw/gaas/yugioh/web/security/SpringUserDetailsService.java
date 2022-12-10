@@ -1,5 +1,6 @@
 package tw.gaas.yugioh.web.security;
 
+import net.purefunc.emoji.Emoji3;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,6 @@ public class SpringUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional
                 .of(userMap.get(username))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + username + " not found"));
     }
 }

@@ -3,13 +3,7 @@ package tw.gaas.yugioh.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import net.purefunc.emoji.Emoji2;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tw.gaas.yugioh.data.dto.CardReqDto;
 import tw.gaas.yugioh.data.dto.DuelFieldDto;
@@ -20,6 +14,7 @@ import tw.gaas.yugioh.data.enu.Phase;
 import tw.gaas.yugioh.data.enu.Side;
 import tw.gaas.yugioh.manager.GameManager;
 import tw.gaas.yugioh.manager.NetworkManager;
+import tw.gaas.yugioh.manager.PairManager;
 import tw.gaas.yugioh.web.security.exception.DuelFieldNotFound;
 
 import java.io.IOException;
@@ -35,10 +30,12 @@ import java.util.UUID;
 public class DuelFieldController {
 
     private final GameManager gameManager;
+    private final PairManager pairManager;
     private final NetworkManager networkManager;
 
-    public DuelFieldController(GameManager gameManager, NetworkManager networkManager) {
+    public DuelFieldController(GameManager gameManager, PairManager pairManager, NetworkManager networkManager) {
         this.gameManager = gameManager;
+        this.pairManager = pairManager;
         this.networkManager = networkManager;
     }
 
@@ -50,34 +47,29 @@ public class DuelFieldController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField:join")
     public Map<String, String> joinFuelField(Principal principal) {
-        final String pairDuelFieldUuid = gameManager.requestPair();
-        final String duelFieldUuid = UUID.randomUUID().toString();
-
         final Duelist duelist = new Duelist(principal.getName());
         final Zone zone = new Zone(duelist);
 
-        if (isLeftDuelist(pairDuelFieldUuid)) {
-            final DuelField duelField = new DuelField(duelFieldUuid);
-            duelField.setLeft(zone);
-            duelField.waitDuelist();
+        return pairManager
+                .requestPair()
+                .map(pairDuelFieldUuid -> {
+                    final DuelField duelField = gameManager.findDuelFieldByUuid(pairDuelFieldUuid);
+                    duelField.setRight(zone);
+                    duelField.start();
 
-            gameManager.putDuelFieldWithUuid(duelFieldUuid, duelField);
-            gameManager.submitPairRequest(duelFieldUuid);
+                    return Map.of("duelFieldUuid", pairDuelFieldUuid);
+                })
+                .orElseGet(() -> {
+                    final String duelFieldUuid = UUID.randomUUID().toString();
+                    final DuelField duelField = new DuelField(duelFieldUuid);
+                    duelField.setLeft(zone);
+                    duelField.waitDuelist();
 
-            return Map.of(
-                    "sse", "curl -H \"Accept:text/event-stream\" http://localhost:8080/java/api/v1.0/duelField/" + duelFieldUuid + ":sse",
-                    "duelFieldUuid", duelFieldUuid
-            );
-        } else {
-            final DuelField duelField = gameManager.findDuelFieldByUuid(pairDuelFieldUuid);
-            duelField.setRight(zone);
-            duelField.start();
+                    pairManager.submitPairRequest(duelFieldUuid);
+                    gameManager.putDuelFieldWithUuid(duelFieldUuid, duelField);
 
-            return Map.of(
-                    "sse", "curl -H \"Accept:text/event-stream\" http://localhost:8080/java/api/v1.0/duelField/" + pairDuelFieldUuid + ":sse",
-                    "duelFieldUuid", pairDuelFieldUuid
-            );
-        }
+                    return Map.of("duelFieldUuid", duelFieldUuid);
+                });
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -178,7 +170,7 @@ public class DuelFieldController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/duelField/{uuid}/:sse")
+    @GetMapping("/duelField/{uuid}:sse")
     public SseEmitter listenDuelField(@PathVariable String uuid) throws IOException {
         final SseEmitter sseEmitter = new SseEmitter(0L);
         sseEmitter.send(
@@ -190,9 +182,5 @@ public class DuelFieldController {
         );
 
         return networkManager.register(uuid, sseEmitter);
-    }
-
-    private boolean isLeftDuelist(String pairDuelFieldUuid) {
-        return pairDuelFieldUuid == null;
     }
 }

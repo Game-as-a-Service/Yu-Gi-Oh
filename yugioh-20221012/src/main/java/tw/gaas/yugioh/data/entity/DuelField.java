@@ -5,19 +5,14 @@ import net.purefunc.emoji.Emoji0;
 import net.purefunc.emoji.Emoji2;
 import net.purefunc.emoji.Emoji3;
 import tw.gaas.yugioh.data.dto.DuelFieldDto;
-import tw.gaas.yugioh.data.dto.ZoneDto;
 import tw.gaas.yugioh.data.enu.Phase;
 import tw.gaas.yugioh.data.enu.Side;
 import tw.gaas.yugioh.data.enu.State;
-import tw.gaas.yugioh.web.security.exception.NotCardInMonsterCards;
-import tw.gaas.yugioh.web.security.exception.NotDuelistInZone;
-import tw.gaas.yugioh.web.security.exception.NotMonsterCardInHand;
-import tw.gaas.yugioh.web.security.exception.NotSpellCardInHand;
-import tw.gaas.yugioh.web.security.exception.NotTrapCardInHand;
-import tw.gaas.yugioh.web.security.exception.WrongPhase;
+import tw.gaas.yugioh.web.security.exception.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @ToString
 public class DuelField {
@@ -60,14 +55,14 @@ public class DuelField {
     }
 
     public void validPhase(Phase phase) {
-        if (this.phase != phase) throw new WrongPhase(this.phase.name() + " != " + phase.name());
+        if (this.phase != phase) throw new WrongPhase(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + this.phase.name() + " != " + phase.name());
     }
 
     public void validDuelist(Side side, String username) {
         if (side == Side.LEFT) {
-            if (!left.validIsDuelist(username)) throw new NotDuelistInZone(username);
+            if (!left.validIsDuelist(username)) throw new NotDuelistInZone(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + username);
         } else {
-            if (!right.validIsDuelist(username)) throw new NotDuelistInZone(username);
+            if (!right.validIsDuelist(username)) throw new NotDuelistInZone(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + username);
         }
     }
 
@@ -96,10 +91,10 @@ public class DuelField {
     public void validDuelistSummonMonster(Side side, String uuid) {
         if (side == Side.LEFT) {
             if (!left.validIsDuelistMonsterHandCard(uuid))
-                throw new NotMonsterCardInHand("Not Monster in Hand " + uuid);
+                throw new NotMonsterCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Monster in Hand " + uuid);
         } else {
             if (!right.validIsDuelistMonsterHandCard(uuid))
-                throw new NotMonsterCardInHand("Not Monster in Hand " + uuid);
+                throw new NotMonsterCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Monster in Hand " + uuid);
         }
     }
 
@@ -127,9 +122,9 @@ public class DuelField {
 
     public void validDuelistApplySpell(Side side, String uuid) {
         if (side == Side.LEFT) {
-            if (!left.validIsDuelistSpellHandCard(uuid)) throw new NotSpellCardInHand("Not Spell in Hand " + uuid);
+            if (!left.validIsDuelistSpellHandCard(uuid)) throw new NotSpellCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Spell in Hand " + uuid);
         } else {
-            if (!right.validIsDuelistSpellHandCard(uuid)) throw new NotSpellCardInHand("Not Spell in Hand " + uuid);
+            if (!right.validIsDuelistSpellHandCard(uuid)) throw new NotSpellCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Spell in Hand " + uuid);
         }
     }
 
@@ -157,9 +152,9 @@ public class DuelField {
 
     public void validDuelistCoverTrap(Side side, String uuid) {
         if (side == Side.LEFT) {
-            if (!left.validIsDuelistTrapHandCard(uuid)) throw new NotTrapCardInHand("Not Trap in Hand " + uuid);
+            if (!left.validIsDuelistTrapHandCard(uuid)) throw new NotTrapCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Trap in Hand " + uuid);
         } else {
-            if (!right.validIsDuelistTrapHandCard(uuid)) throw new NotTrapCardInHand("Not Trap in Hand " + uuid);
+            if (!right.validIsDuelistTrapHandCard(uuid)) throw new NotTrapCardInHand(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + "Not Trap in Hand " + uuid);
         }
     }
 
@@ -195,9 +190,9 @@ public class DuelField {
 
     public void validDuelistStartBattle(Side side, String uuid) {
         if (side == Side.LEFT) {
-            if (!left.validIsDuelistMonsterCard(uuid)) throw new NotCardInMonsterCards(uuid);
+            if (!left.validIsDuelistMonsterCard(uuid)) throw new NotCardInMonsterCards(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + uuid);
         } else {
-            if (!right.validIsDuelistMonsterCard(uuid)) throw new NotCardInMonsterCards(uuid);
+            if (!right.validIsDuelistMonsterCard(uuid)) throw new NotCardInMonsterCards(Emoji3.DOUBLE_EXCLAMATION_MARK + " " + uuid);
         }
     }
 
@@ -218,22 +213,20 @@ public class DuelField {
     }
 
     public DuelFieldDto toDto(Boolean isLeftDuelist, Boolean isRightDuelist) {
-        ZoneDto leftDto = null;
-        if (left != null) {
-            leftDto = left.toDto(isLeftDuelist);
-        }
-
-        ZoneDto rightDto = null;
-        if (right != null) {
-            rightDto = right.toDto(isRightDuelist);
-        }
-
         return DuelFieldDto
                 .builder()
                 .boardMessages(boardMessages)
                 .uuid(uuid)
-                .left(leftDto)
-                .right(rightDto)
+                .left(Optional
+                        .ofNullable(left)
+                        .map(v -> v.toDto(isLeftDuelist))
+                        .orElse(null)
+                )
+                .right(Optional
+                        .ofNullable(right)
+                        .map(v -> v.toDto(isRightDuelist))
+                        .orElse(null)
+                )
                 .phase(phase)
                 .build();
     }

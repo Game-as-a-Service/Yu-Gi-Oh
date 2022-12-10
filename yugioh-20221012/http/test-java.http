@@ -1,17 +1,3 @@
-### Java status endpoint
-GET http://localhost:8080/java/api/v1.0/status
-
-> {%
-client.test("Request executed successfully", function() {
-    client.log(client.global.get("bearerTokenV").toString());
-    client.log(client.global.get("bearerTokenQ").toString());
-    client.log(client.global.get("bearerTokenM").toString());
-    client.log(client.global.get("uuid").toString());
-  client.assert(response.status === 200, "Response status is not 200");
-});
-%}
-
-
 ### Vincent Login
 POST http://localhost:8080/java/api/v1.0/auth:login
 Content-Type: application/json
@@ -21,7 +7,9 @@ Content-Type: application/json
   "password": "123456"
 }
 
-> {% client.global.set("bearerTokenV", response.headers.valueOf("Authorization")); %}
+> {%
+    client.global.set("bearerTokenV", response.body.token.toString());
+%}
 
 
 ### qrtt1 Login
@@ -33,7 +21,9 @@ Content-Type: application/json
   "password": "123456"
 }
 
-> {% client.global.set("bearerTokenQ", response.headers.valueOf("Authorization")); %}
+> {%
+    client.global.set("bearerTokenQ", response.body.token.toString());
+%}
 
 
 ### Musk Login
@@ -45,14 +35,18 @@ Content-Type: application/json
   "password": "123456"
 }
 
-> {% client.global.set("bearerTokenM", response.headers.valueOf("Authorization")); %}
+> {%
+    client.global.set("bearerTokenM", response.body.token.toString());
+%}
 
 
 ### Vincent Join Games
 POST http://localhost:8080/java/api/v1.0/duelField:join
 Authorization: Bearer {{bearerTokenV}}
 
-> {% client.global.set("uuid", response.body.duelFieldUuid.toString()); %}
+> {%
+    client.global.set("uuid", response.body.duelFieldUuid.toString());
+%}
 
 
 ### qrtt1 Join Games
@@ -60,14 +54,39 @@ POST http://localhost:8080/java/api/v1.0/duelField:join
 Authorization: Bearer {{bearerTokenQ}}
 
 
+### Java status endpoint
+GET http://localhost:8080/java/api/v1.0/status
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.log(client.global.get("bearerTokenV").toString());
+        client.log(client.global.get("bearerTokenQ").toString());
+        client.log(client.global.get("bearerTokenM").toString());
+        client.log(client.global.get("uuid").toString());
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}
+
+
 ### Vincent Get DuelField By Uuid (Duelist)
 GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
 Authorization: Bearer {{bearerTokenV}}
 
 
+### qrtt1 Get DuelField By Uuid (Duelist)
+GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
+Authorization: Bearer {{bearerTokenQ}}
+
+
 ### Musk Get DuelField By Uuid
 GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
 Authorization: Bearer {{bearerTokenM}}
+
+
+### Get DuelField By Uuid SSE
+GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}:sse
+Authorization: Bearer {{bearerTokenV}}
+Content-Type: text/event-stream
 
 
 ### Vincent Draw Card
