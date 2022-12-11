@@ -19,52 +19,48 @@ public class Duelist {
 
     public Duelist(String name) {
         this.name = name;
-        this.lp = 0;
+        this.lp = 4000;
         this.handCards = new HandCards();
     }
 
-    public String getName() {
-        return name;
+    public Boolean validDuelist(String username) {
+        return this.name.equals(username);
     }
 
-    public void initLp() {
-        this.lp = 4000;
+    public Boolean validDuelistMonsterHandCard(String uuid) {
+        return handCards.containsThisMonsterCard(uuid);
+    }
+
+    public Boolean validDuelistSpellHandCard(String uuid) {
+        return handCards.containsThisSpellCard(uuid);
+    }
+
+    public Boolean validDuelistTrapHandCard(String uuid) {
+        return handCards.containsThisTrapCard(uuid);
     }
 
     public void drawCards(Card... draw) {
         Arrays.stream(draw).forEach(v -> handCards.draw(v));
     }
 
-    public boolean validIsDuelist(String username) {
-        return this.name.equals(username);
-    }
-
-    public boolean validIsDuelistMonsterHandCard(String uuid) {
-        return handCards.containsThisMonsterCard(uuid);
-    }
-
     public Card summonMonster(String uuid) {
         return handCards.submit(uuid);
-    }
-
-    public boolean validIsDuelistSpellHandCard(String uuid) {
-        return handCards.containsThisSpellCard(uuid);
     }
 
     public Card applySpell(String uuid) {
         return handCards.submit(uuid);
     }
 
-    public boolean validIsDuelistTrapHandCard(String uuid) {
-        return handCards.containsThisTrapCard(uuid);
-    }
-
     public Card coverTrap(String uuid) {
         return handCards.submit(uuid);
     }
 
-    public void updateScore(Integer scoreDelta) {
+    public void startBattle(Integer scoreDelta) {
         this.lp = this.lp - scoreDelta;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public DuelistDto toDto(Boolean isDuelist) {

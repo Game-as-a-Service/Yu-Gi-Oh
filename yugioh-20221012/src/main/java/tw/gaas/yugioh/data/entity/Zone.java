@@ -2,12 +2,7 @@ package tw.gaas.yugioh.data.entity;
 
 import lombok.ToString;
 import tw.gaas.yugioh.data.dto.ZoneDto;
-import tw.gaas.yugioh.data.entity.card.Card;
-import tw.gaas.yugioh.data.entity.card.Deck;
-import tw.gaas.yugioh.data.entity.card.GraveYardCards;
-import tw.gaas.yugioh.data.entity.card.MonsterCard;
-import tw.gaas.yugioh.data.entity.card.MonsterCards;
-import tw.gaas.yugioh.data.entity.card.SpellAndTrapCards;
+import tw.gaas.yugioh.data.entity.card.*;
 import tw.gaas.yugioh.data.enu.State;
 
 @ToString
@@ -32,35 +27,38 @@ public class Zone {
         this.deck = new Deck();
     }
 
-    public Duelist getDuelist() {
-        return duelist;
-    }
-
-    public void setup() {
-        duelist.initLp();
+    public void start() {
         deck.shuffling();
         duelist.drawCards(deck.draw(), deck.draw(), deck.draw(), deck.draw(), deck.draw(), deck.draw());
     }
 
-    public boolean validIsDuelist(String username) {
-        return duelist.validIsDuelist(username);
+    public Boolean validDuelist(String username) {
+        return duelist.validDuelist(username);
+    }
+
+    public Boolean validDuelistMonsterHandCard(String uuid) {
+        return duelist.validDuelistMonsterHandCard(uuid);
+    }
+
+    public Boolean validDuelistSpellHandCard(String uuid) {
+        return duelist.validDuelistSpellHandCard(uuid);
+    }
+
+    public Boolean validDuelistTrapHandCard(String uuid) {
+        return duelist.validDuelistTrapHandCard(uuid);
+    }
+
+    public Boolean validDuelistMonsterCard(String uuid) {
+        return monsterCards.validIsDuelistMonsterCard(uuid);
     }
 
     public void duelistDraw() {
         duelist.drawCards(deck.draw());
     }
 
-    public boolean validIsDuelistMonsterHandCard(String uuid) {
-        return duelist.validIsDuelistMonsterHandCard(uuid);
-    }
-
     public void duelistSummonMonster(String uuid, State state) {
         Card card = duelist.summonMonster(uuid);
         monsterCards.summon(card, state);
-    }
-
-    public boolean validIsDuelistSpellHandCard(String uuid) {
-        return duelist.validIsDuelistSpellHandCard(uuid);
     }
 
     public void duelistApplySpell(String uuid) {
@@ -69,17 +67,9 @@ public class Zone {
         // TODO: apply effect
     }
 
-    public boolean validIsDuelistTrapHandCard(String uuid) {
-        return duelist.validIsDuelistTrapHandCard(uuid);
-    }
-
     public void duelistCoverTrap(String uuid, State state) {
         final Card card = duelist.coverTrap(uuid);
         spellAndTrapCards.cover(card, state);
-    }
-
-    public boolean validIsDuelistMonsterCard(String uuid) {
-        return monsterCards.validIsDuelistMonsterCard(uuid);
     }
 
     public void duelistStartBattle(String uuid, Zone zone) {
@@ -92,17 +82,21 @@ public class Zone {
                 zone.monsterCards.moveToGraveYard(target);
                 zone.graveYardCards.put(target);
             }
-            zone.duelist.updateScore(scoreDelta);
+            zone.duelist.startBattle(scoreDelta);
         } else if (scoreDelta < 0) {
             this.monsterCards.moveToGraveYard(monsterCard);
             this.graveYardCards.put(monsterCard);
-            duelist.updateScore(scoreDelta);
+            duelist.startBattle(scoreDelta);
         } else {
             zone.monsterCards.moveToGraveYard(target);
             zone.graveYardCards.put(target);
             this.monsterCards.moveToGraveYard(monsterCard);
             this.graveYardCards.put(monsterCard);
         }
+    }
+
+    public Duelist getDuelist() {
+        return duelist;
     }
 
     public ZoneDto toDto(Boolean isDuelist) {
