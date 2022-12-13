@@ -40,7 +40,7 @@ public class DuelField {
 
     public void setRight(Zone zone) {
         this.right = zone;
-        boardMessages.add(String.format("%s Right Duelist %s Entered", Emoji2.MILITARY_MEDAL, left.getDuelist().getName()));
+        boardMessages.add(String.format("%s Right Duelist %s Entered", Emoji2.MILITARY_MEDAL, right.getDuelist().getName()));
     }
 
     public void waitDuelist() {

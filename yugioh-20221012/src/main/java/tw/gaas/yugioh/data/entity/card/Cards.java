@@ -2,12 +2,7 @@ package tw.gaas.yugioh.data.entity.card;
 
 import lombok.ToString;
 import tw.gaas.yugioh.data.dto.CardsDto;
-import tw.gaas.yugioh.data.enu.Attribute;
-import tw.gaas.yugioh.data.enu.MonsterType;
-import tw.gaas.yugioh.data.enu.SpellType;
-import tw.gaas.yugioh.data.enu.State;
-import tw.gaas.yugioh.data.enu.TrapType;
-import tw.gaas.yugioh.data.enu.Type;
+import tw.gaas.yugioh.data.enu.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +25,7 @@ public abstract class Cards {
                     .defense(2500)
                     .build();
 
-    private static final MonsterCard Dark_Magician =
+    private static final MonsterCard DarkMagician =
             MonsterCard
                     .builder()
                     .state(State.BACK)
@@ -44,7 +39,7 @@ public abstract class Cards {
                     .defense(2100)
                     .build();
 
-    private static final SpellCard MONSTER_REBORN =
+    private static final SpellCard MonsterReborn =
             SpellCard
                     .builder()
                     .state(State.BACK)
@@ -55,7 +50,7 @@ public abstract class Cards {
                     .build();
 
 
-    private static final TrapCard MIRROR_FORCE =
+    private static final TrapCard MirrorForce =
             TrapCard
                     .builder()
                     .state(State.BACK)
@@ -67,9 +62,9 @@ public abstract class Cards {
 
     protected static final List<Card> library = List.of(
             BlueEyesShiningDragon,
-            Dark_Magician,
-            MONSTER_REBORN,
-            MIRROR_FORCE
+            DarkMagician,
+            MonsterReborn,
+            MirrorForce
     );
 
     // 上限

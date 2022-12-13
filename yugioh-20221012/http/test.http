@@ -100,17 +100,17 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "d0f01132-9ad7-4e5c-bae1-a067e18fbbf9"
+  "uuid": "cdba5b3e-be63-4b96-997a-962670991a18"
 }
 
 
 ### Vincent Apply Spell
-POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/LEFT:applySpell?skip=true
+POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/LEFT:applySpell
 Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "860481ab-1cdd-4539-8910-b5c80b92a2e6"
+  "uuid": "31fbedcd-df7e-4b5c-bb78-cff0a48a10dd"
 }
 
 
@@ -120,9 +120,10 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "99dff81d-a922-4346-b806-6339304c3c61",
+  "uuid": "152927b0-6a4d-4baa-828d-5d65b2ef58a8",
   "state": "BACK"
 }
+
 
 ### Vincent Start Battle
 POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/LEFT:startBattle
@@ -130,7 +131,7 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "5ba31681-6ce6-4805-9dd7-98c778dd63b8"
+  "uuid": "0f11eac8-2a89-45fb-bde8-9a157694e843"
 }
 
 
@@ -145,7 +146,7 @@ Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
 {
-  "uuid": "65178d75-ba3a-4f3f-806e-318b6b2a72ac"
+  "uuid": "64967479-cd92-4b8d-88d8-ce4f3804e3c0"
 }
 
 
@@ -155,7 +156,7 @@ Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
 {
-  "uuid": "94ab5d8d-a763-459e-88d2-c5e8e44a7a51"
+  "uuid": "d968a1bd-bc5b-4797-be23-1ea4fd5cb2f5"
 }
 
 
@@ -165,12 +166,13 @@ Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
 {
-  "uuid": "86d54dda-777f-4243-b842-dfa430f5a535",
+  "uuid": "13a0291b-74b6-4c9a-ba68-f7f0cb7e31bb",
   "state": "BACK"
 }
 
+
 ### qrtt1 Start Battle
-POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:startBattle?skip=true
+POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:startBattle
 Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
