@@ -1,0 +1,41 @@
+name: Kehao's Walking Skeleton Implementation
+
+on:
+  push:
+    branches:
+      - 'practice/kehao'
+
+permissions:
+  contents: read
+
+jobs:
+  build-kehao:
+    environment: kehao
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./yugioh-kehao
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: ./yugioh-kehao
+
+      - name: Execute Gradle test task
+        run: ./gradlew test
+
+      - name: Execute Gradle jib task
+        run: ./gradlew jib
+        env:
+          CR_URI: ${{ secrets.CR_URI }}
+          CR_USERNAME: ${{ secrets.CR_USERNAME }}
+          CR_PASSWORD: ${{ secrets.CR_PASSWORD }}
