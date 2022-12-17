@@ -1,0 +1,14 @@
+apiVersion: skaffold/v2beta5
+kind: Config
+metadata:
+  name: yugioh
+build:
+  artifacts:
+    - image: docker.io/hhnj/yugioh
+      jib:
+        project: framework
+        type: gradle
+deploy:
+  kubectl:
+    manifests:
+      - "k8s/*.yaml"

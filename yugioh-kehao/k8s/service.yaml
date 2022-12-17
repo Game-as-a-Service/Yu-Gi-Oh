@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yugioh
+spec:
+  selector:
+    matchLabels:
+      app: yugioh
+  template:
+    metadata:
+      labels:
+        app: yugioh
+    spec:
+      containers:
+        - name: yugioh
+          image: docker.io/hhnj/yugioh
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

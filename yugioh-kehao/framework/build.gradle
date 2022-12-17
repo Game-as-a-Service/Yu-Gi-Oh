@@ -6,11 +6,21 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.21'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.7.21'
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.7.21'
+    id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'tw.gaas'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
 
 configurations {
     compileOnly {
@@ -55,4 +65,18 @@ tasks.withType(KotlinCompile).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jib {
+    def gitHash = getGitHash()
+    def versionTag = String.format("%s-%s", project.version, gitHash)
+    def yugiohContainerImage = System.getenv('CR_URI') ?: 'docker.io/hhnj/yugioh'
+    to {
+        image = yugiohContainerImage
+        tags = [versionTag, 'latest'] as List<String>
+        auth {
+            username = System.getenv('CR_USERNAME') ?: ''
+            password = System.getenv('CR_PASSWORD') ?: ''
+        }
+    }
 }
