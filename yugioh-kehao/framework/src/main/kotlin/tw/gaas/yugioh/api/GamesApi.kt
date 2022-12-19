@@ -37,7 +37,7 @@ interface GamesApi {
         )]
     )
     @RequestMapping(
-        value = ["/games/find"],
+        value = ["/api/games/find"],
         produces = ["application/json"],
         consumes = ["application/json"],
         method = [RequestMethod.POST]
@@ -66,7 +66,7 @@ interface GamesApi {
             )
         )]
     )
-    @RequestMapping(value = ["/games/{gameId}"], produces = ["application/json"], method = [RequestMethod.GET])
+    @RequestMapping(value = ["/api/games/{gameId}"], produces = ["application/json"], method = [RequestMethod.GET])
     fun getGameGameId(
         @Parameter(
             `in` = ParameterIn.PATH,
