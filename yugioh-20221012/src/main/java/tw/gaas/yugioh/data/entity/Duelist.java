@@ -11,11 +11,11 @@ import java.util.Arrays;
 public class Duelist {
 
     // 名稱
-    private String name;
+    private final String name;
     // 生命值
     private Integer lp;
     // 手牌
-    private HandCards handCards;
+    private final HandCards handCards;
 
     public Duelist(String name) {
         this.name = name;
@@ -40,7 +40,7 @@ public class Duelist {
     }
 
     public void drawCards(Card... draw) {
-        Arrays.stream(draw).forEach(v -> handCards.draw(v));
+        Arrays.stream(draw).forEach(handCards::draw);
     }
 
     public Card summonMonster(String uuid) {

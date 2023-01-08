@@ -10,7 +10,6 @@ import tw.gaas.yugioh.data.dto.DuelFieldDto;
 import tw.gaas.yugioh.data.entity.DuelField;
 import tw.gaas.yugioh.data.entity.Duelist;
 import tw.gaas.yugioh.data.entity.Zone;
-import tw.gaas.yugioh.data.enu.Phase;
 import tw.gaas.yugioh.data.enu.Side;
 import tw.gaas.yugioh.manager.GameManager;
 import tw.gaas.yugioh.manager.NetworkManager;
@@ -33,7 +32,11 @@ public class DuelFieldController {
     private final PairManager pairManager;
     private final NetworkManager networkManager;
 
-    public DuelFieldController(GameManager gameManager, PairManager pairManager, NetworkManager networkManager) {
+    public DuelFieldController(
+            GameManager gameManager,
+            PairManager pairManager,
+            NetworkManager networkManager
+    ) {
         this.gameManager = gameManager;
         this.pairManager = pairManager;
         this.networkManager = networkManager;
@@ -52,18 +55,18 @@ public class DuelFieldController {
 
         return pairManager
                 .requestPair()
-                .map(pairDuelFieldUuid -> {
-                    final DuelField duelField = gameManager.findDuelFieldByUuid(pairDuelFieldUuid);
-                    duelField.setRight(zone);
+                .map(duelFieldUuid -> {
+                    final DuelField duelField = gameManager.findDuelFieldByUuid(duelFieldUuid);
+                    duelField.initRight(zone);
                     duelField.start();
 
-                    return Map.of("duelFieldUuid", pairDuelFieldUuid);
+                    return Map.of("duelFieldUuid", duelFieldUuid);
                 })
                 .orElseGet(() -> {
                     final String duelFieldUuid = UUID.randomUUID().toString();
                     final DuelField duelField = new DuelField(duelFieldUuid);
-                    duelField.setLeft(zone);
-                    duelField.waitDuelist();
+                    duelField.initLeft(zone);
+                    duelField.waitRight();
 
                     pairManager.submitPairRequest(duelFieldUuid);
                     gameManager.putDuelFieldWithUuid(duelFieldUuid, duelField);
@@ -74,99 +77,83 @@ public class DuelFieldController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField/{uuid}/{side}:drawCard")
-    public void duelistDrawCard(@PathVariable String uuid, @PathVariable Side side, Principal principal) {
-        final DuelField duelField = Optional
-                .of(gameManager.findDuelFieldByUuid(uuid))
-                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
-        final Phase phase = side == Side.LEFT ? Phase.LEFT_DRAW : Phase.RIGHT_DRAW;
-        duelField.validPhase(phase);
-        duelField.validDuelist(side, principal.getName());
-
-        duelField.duelistDraw(side);
+    public void duelistDrawCard(
+            @PathVariable String uuid,
+            @PathVariable Side side,
+            Principal principal) {
+        findDuelFieldByUuid(uuid).duelistDraw(side, principal.getName());
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField/{uuid}/{side}:summonMonster")
-    public void duelistSummonMonster(@PathVariable String uuid, @PathVariable Side side, @RequestParam(required = false, defaultValue = "false") Boolean skip, @RequestBody CardReqDto cardReqDto, Principal principal) {
-        final DuelField duelField = Optional
-                .of(gameManager.findDuelFieldByUuid(uuid))
-                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
-        final Phase phase = side == Side.LEFT ? Phase.LEFT_MONSTER : Phase.RIGHT_MONSTER;
-        duelField.validPhase(phase);
-        duelField.validDuelist(side, principal.getName());
-
+    public void duelistSummonMonster(
+            @PathVariable String uuid,
+            @PathVariable Side side,
+            @RequestParam(required = false, defaultValue = "false") Boolean skip,
+            @RequestBody CardReqDto cardReqDto,
+            Principal principal) {
         if (skip) {
-            duelField.duelistSkipSummonMonster(side);
+            findDuelFieldByUuid(uuid).duelistSkipSummonMonster(side);
         } else {
-            duelField.validDuelistSummonMonster(side, cardReqDto.getUuid());
-            duelField.duelistSummonMonster(side, cardReqDto.getUuid(), cardReqDto.getState());
+            findDuelFieldByUuid(uuid).duelistSummonMonster(side, cardReqDto.getUuid(), cardReqDto.getState(), principal.getName());
         }
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField/{uuid}/{side}:applySpell")
-    public void duelistApplySpell(@PathVariable String uuid, @PathVariable Side side, @RequestParam(required = false, defaultValue = "false") Boolean skip, @RequestBody CardReqDto cardReqDto, Principal principal) {
-        final DuelField duelField = Optional
-                .of(gameManager.findDuelFieldByUuid(uuid))
-                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
-        final Phase phase = side == Side.LEFT ? Phase.LEFT_SPELL : Phase.RIGHT_SPELL;
-        duelField.validPhase(phase);
-        duelField.validDuelist(side, principal.getName());
-
+    public void duelistApplySpell(
+            @PathVariable String uuid,
+            @PathVariable Side side,
+            @RequestParam(required = false, defaultValue = "false") Boolean skip,
+            @RequestBody CardReqDto cardReqDto, Principal principal) {
         if (skip) {
-            duelField.duelistSkipApplySpell(side);
+            findDuelFieldByUuid(uuid).duelistSkipApplySpell(side);
         } else {
-            duelField.validDuelistApplySpell(side, cardReqDto.getUuid());
-            duelField.duelistApplySpell(side, cardReqDto.getUuid());
+            findDuelFieldByUuid(uuid).duelistApplySpell(side, cardReqDto.getUuid(), principal.getName());
         }
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField/{uuid}/{side}:coverTrap")
-    public void duelistCoverTrap(@PathVariable String uuid, @PathVariable Side side, @RequestParam(required = false, defaultValue = "false") Boolean skip, @RequestBody CardReqDto cardReqDto, Principal principal) {
-        final DuelField duelField = Optional
-                .of(gameManager.findDuelFieldByUuid(uuid))
-                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
-        final Phase phase = side == Side.LEFT ? Phase.LEFT_TRAP : Phase.RIGHT_TRAP;
-        duelField.validPhase(phase);
-        duelField.validDuelist(side, principal.getName());
-
+    public void duelistCoverTrap(
+            @PathVariable String uuid,
+            @PathVariable Side side,
+            @RequestParam(required = false, defaultValue = "false") Boolean skip,
+            @RequestBody CardReqDto cardReqDto,
+            Principal principal) {
         if (skip) {
-            duelField.duelistSkipCoverTrap(side);
+            findDuelFieldByUuid(uuid).duelistSkipCoverTrap(side);
         } else {
-            duelField.validDuelistCoverTrap(side, cardReqDto.getUuid());
-            duelField.duelistCoverTrap(side, cardReqDto.getUuid(), cardReqDto.getState());
+            findDuelFieldByUuid(uuid).duelistCoverTrap(side, cardReqDto.getUuid(), cardReqDto.getState(), principal.getName());
         }
-
-        duelField.skipFirstRoundBattle();
+        findDuelFieldByUuid(uuid).skipFirstRoundBattle();
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField/{uuid}/{side}:startBattle")
-    public void duelistStartBattle(@PathVariable String uuid, @PathVariable Side side, @RequestParam(required = false, defaultValue = "false") Boolean skip, @RequestBody CardReqDto cardReqDto, Principal principal) {
-        final DuelField duelField = Optional
-                .of(gameManager.findDuelFieldByUuid(uuid))
-                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
-        final Phase phase = side == Side.LEFT ? Phase.LEFT_BATTLE : Phase.RIGHT_BATTLE;
-        duelField.validPhase(phase);
-        duelField.validDuelist(side, principal.getName());
-
+    public void duelistStartBattle(
+            @PathVariable String uuid,
+            @PathVariable Side side,
+            @RequestParam(required = false, defaultValue = "false") Boolean skip,
+            @RequestBody CardReqDto cardReqDto,
+            Principal principal) {
         if (skip) {
-            duelField.duelistSkipStartBattle(side);
+            findDuelFieldByUuid(uuid).duelistSkipStartBattle(side);
         } else {
-            duelField.validDuelistStartBattle(side, cardReqDto.getUuid());
-            duelField.duelistStartBattle(side, cardReqDto.getUuid());
+            findDuelFieldByUuid(uuid).duelistStartBattle(side, cardReqDto.getUuid(), principal.getName());
         }
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/duelField/{uuid}")
-    public DuelFieldDto queryDuelField(@PathVariable String uuid, Principal principal) {
-        final DuelField duelField = gameManager.findDuelFieldByUuid(uuid);
-        final Boolean isLeftDuelist = duelField.checkIsDuelist(Side.LEFT, principal.getName());
-        final Boolean isRightDuelist = duelField.checkIsDuelist(Side.RIGHT, principal.getName());
+    public DuelFieldDto queryDuelField(
+            @PathVariable String uuid,
+            Principal principal) {
 
-        return duelField.toDto(isLeftDuelist, isRightDuelist);
+        return findDuelFieldByUuid(uuid).toDto(
+                findDuelFieldByUuid(uuid).checkIsDuelist(Side.LEFT, principal.getName()),
+                findDuelFieldByUuid(uuid).checkIsDuelist(Side.RIGHT, principal.getName())
+        );
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -182,5 +169,11 @@ public class DuelFieldController {
         );
 
         return networkManager.register(uuid, sseEmitter);
+    }
+
+    private DuelField findDuelFieldByUuid(String uuid) {
+        return Optional
+                .of(gameManager.findDuelFieldByUuid(uuid))
+                .orElseThrow(() -> new DuelFieldNotFound("DuelField with " + uuid + " not found"));
     }
 }

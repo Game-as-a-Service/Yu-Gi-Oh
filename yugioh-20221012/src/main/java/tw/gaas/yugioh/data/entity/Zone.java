@@ -56,7 +56,10 @@ public class Zone {
         duelist.drawCards(deck.draw());
     }
 
-    public void duelistSummonMonster(String uuid, State state) {
+    public void duelistSummonMonster(
+            String uuid,
+            State state
+    ) {
         Card card = duelist.summonMonster(uuid);
         monsterCards.summon(card, state);
     }
@@ -67,12 +70,18 @@ public class Zone {
         // TODO: apply effect
     }
 
-    public void duelistCoverTrap(String uuid, State state) {
+    public void duelistCoverTrap(
+            String uuid,
+            State state
+    ) {
         final Card card = duelist.coverTrap(uuid);
         spellAndTrapCards.cover(card, state);
     }
 
-    public void duelistStartBattle(String uuid, Zone zone) {
+    public void duelistStartBattle(
+            String uuid,
+            Zone zone
+    ) {
         final MonsterCard monsterCard = (MonsterCard) monsterCards.startBattle(uuid);
         final MonsterCard target = zone.monsterCards.chooseTarget();
 

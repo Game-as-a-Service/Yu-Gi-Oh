@@ -38,4 +38,5 @@
 3. [遊戲王第三次開會](https://youtu.be/HZFNxIcTyQM)
 4. [遊戲王第四次開會](https://youtu.be/yCsG4E655xU)
 5. [遊戲王第五次開會](https://youtu.be/F6Cfz6IpBgo)
+6. [遊戲王第六次開會](https://youtu.be/QzR8h71O60U)
 

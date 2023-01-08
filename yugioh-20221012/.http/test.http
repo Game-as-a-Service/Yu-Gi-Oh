@@ -27,17 +27,17 @@ Content-Type: application/json
 
 
 ### Musk Login
-POST http://localhost:8080/java/api/v1.0/auth:login
-Content-Type: application/json
-
-{
-  "username": "musk",
-  "password": "123456"
-}
-
-> {%
-    client.global.set("bearerTokenM", response.body.token.toString());
-%}
+#POST http://localhost:8080/java/api/v1.0/auth:login
+#Content-Type: application/json
+#
+#{
+#  "username": "musk",
+#  "password": "123456"
+#}
+#
+#> {%
+#    client.global.set("bearerTokenM", response.body.token.toString());
+#%}
 
 
 ### Vincent Join Games
@@ -61,7 +61,7 @@ GET http://localhost:8080/java/api/v1.0/status
     client.test("Request executed successfully", function () {
         client.log(client.global.get("bearerTokenV").toString());
         client.log(client.global.get("bearerTokenQ").toString());
-        client.log(client.global.get("bearerTokenM").toString());
+        // client.log(client.global.get("bearerTokenM").toString());
         client.log(client.global.get("uuid").toString());
         client.assert(response.status === 200, "Response status is not 200");
     });
@@ -78,9 +78,9 @@ GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
 Authorization: Bearer {{bearerTokenQ}}
 
 
-### Musk Get DuelField By Uuid
-GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
-Authorization: Bearer {{bearerTokenM}}
+#### Musk Get DuelField By Uuid
+#GET http://localhost:8080/java/api/v1.0/duelField/{{uuid}}
+#Authorization: Bearer {{bearerTokenM}}
 
 
 ### Get DuelField By Uuid SSE
