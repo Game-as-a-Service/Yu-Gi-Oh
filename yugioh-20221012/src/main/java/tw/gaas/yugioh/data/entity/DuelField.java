@@ -30,17 +30,17 @@ public class DuelField {
 
     public DuelField(String uuid) {
         this.uuid = uuid;
-        boardcast(String.format("%s DuelField %s Init", Emoji2.TROPHY, uuid));
+        boardcast(String.format("C1 %s DuelField %s Init", Emoji2.TROPHY, uuid));
     }
 
     public void initLeft(Zone left) {
         this.left = left;
-        boardcast(String.format("%s Left Duelist %s Entered", Emoji2.MILITARY_MEDAL, left.getDuelist().getName()));
+        boardcast(String.format("C2 %s Left Duelist %s Entered", Emoji2.MILITARY_MEDAL, left.getDuelist().getName()));
     }
 
     public void initRight(Zone zone) {
         this.right = zone;
-        boardcast(String.format("%s Right Duelist %s Entered", Emoji2.MILITARY_MEDAL, right.getDuelist().getName()));
+        boardcast(String.format("C3 %s Right Duelist %s Entered", Emoji2.MILITARY_MEDAL, right.getDuelist().getName()));
     }
 
     public void waitRight() {
@@ -51,7 +51,7 @@ public class DuelField {
         left.start();
         right.start();
         this.phase = Phase.LEFT_DRAW;
-        boardcast(String.format("%s Game Start. Waiting for %s Draw", Emoji3.TRIANGULAR_FLAG, left.getDuelist().getName()));
+        boardcast(String.format("L1 %s Game Start. Waiting for %s Draw", Emoji3.TRIANGULAR_FLAG, left.getDuelist().getName()));
     }
 
     public void duelistDraw(
@@ -64,21 +64,21 @@ public class DuelField {
         if (side == Side.LEFT) {
             left.duelistDraw();
             this.phase = Phase.LEFT_MONSTER;
-            boardcast(String.format("%s Finished Draw. Waiting for %s Summon Monster", Emoji0.RAISED_BACK_OF_HAND, left.getDuelist().getName()));
+            boardcast(String.format("L2 %s Finished Draw. Waiting for %s Summon Monster", Emoji0.RAISED_BACK_OF_HAND, left.getDuelist().getName()));
         } else {
             right.duelistDraw();
             this.phase = Phase.RIGHT_MONSTER;
-            boardcast(String.format("%s Finished Draw. Waiting for %s Summon Monster", Emoji0.RAISED_BACK_OF_HAND, right.getDuelist().getName()));
+            boardcast(String.format("R2 %s Finished Draw. Waiting for %s Summon Monster", Emoji0.RAISED_BACK_OF_HAND, right.getDuelist().getName()));
         }
     }
 
     public void duelistSkipSummonMonster(Side side) {
         if (side == Side.LEFT) {
             this.phase = Phase.LEFT_SPELL;
-            boardcast(String.format("%s Skip Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, left.getDuelist().getName()));
+            boardcast(String.format("L0 %s Skip Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, left.getDuelist().getName()));
         } else {
             this.phase = Phase.RIGHT_SPELL;
-            boardcast(String.format("%s Skip Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, right.getDuelist().getName()));
+            boardcast(String.format("R0 %s Skip Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, right.getDuelist().getName()));
         }
     }
 
@@ -95,21 +95,21 @@ public class DuelField {
         if (side == Side.LEFT) {
             left.duelistSummonMonster(uuid, state);
             this.phase = Phase.LEFT_SPELL;
-            boardcast(String.format("%s Finished Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, left.getDuelist().getName()));
+            boardcast(String.format("L3 %s Finished Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, left.getDuelist().getName()));
         } else {
             right.duelistSummonMonster(uuid, state);
             this.phase = Phase.RIGHT_SPELL;
-            boardcast(String.format("%s Finished Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, right.getDuelist().getName()));
+            boardcast(String.format("R3 %s Finished Summon Monster. Waiting for %s Apply Spell", Emoji0.OGRE, right.getDuelist().getName()));
         }
     }
 
     public void duelistSkipApplySpell(Side side) {
         if (side == Side.LEFT) {
             this.phase = Phase.LEFT_TRAP;
-            boardcast(String.format("%s Skip Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, left.getDuelist().getName()));
+            boardcast(String.format("L0 %s Skip Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, left.getDuelist().getName()));
         } else {
             this.phase = Phase.RIGHT_TRAP;
-            boardcast(String.format("%s Skip Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, right.getDuelist().getName()));
+            boardcast(String.format("R0 %s Skip Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, right.getDuelist().getName()));
         }
     }
 
@@ -125,21 +125,21 @@ public class DuelField {
         if (side == Side.LEFT) {
             left.duelistApplySpell(uuid);
             this.phase = Phase.LEFT_TRAP;
-            boardcast(String.format("%s Finished Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, left.getDuelist().getName()));
+            boardcast(String.format("L4 %s Finished Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, left.getDuelist().getName()));
         } else {
             right.duelistApplySpell(uuid);
             this.phase = Phase.RIGHT_TRAP;
-            boardcast(String.format("%s Finished Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, right.getDuelist().getName()));
+            boardcast(String.format("R4 %s Finished Apply Spell. Waiting for %s Cover Trap", Emoji0.DIZZY, right.getDuelist().getName()));
         }
     }
 
     public void duelistSkipCoverTrap(Side side) {
         if (side == Side.LEFT) {
             this.phase = Phase.LEFT_BATTLE;
-            boardcast(String.format("%s Skip Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, left.getDuelist().getName()));
+            boardcast(String.format("L0 %s Skip Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, left.getDuelist().getName()));
         } else {
             this.phase = Phase.RIGHT_BATTLE;
-            boardcast(String.format("%s Skip Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, right.getDuelist().getName()));
+            boardcast(String.format("R0 %s Skip Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, right.getDuelist().getName()));
         }
     }
 
@@ -156,21 +156,21 @@ public class DuelField {
         if (side == Side.LEFT) {
             left.duelistCoverTrap(uuid, state);
             this.phase = Phase.LEFT_BATTLE;
-            boardcast(String.format("%s Finished Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, left.getDuelist().getName()));
+            boardcast(String.format("L5 %s Finished Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, left.getDuelist().getName()));
         } else {
             right.duelistCoverTrap(uuid, state);
             this.phase = Phase.RIGHT_BATTLE;
-            boardcast(String.format("%s Finished Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, right.getDuelist().getName()));
+            boardcast(String.format("R5 %s Finished Cover Trap. Waiting for %s Battle", Emoji3.WHITE_LARGE_SQUARE, right.getDuelist().getName()));
         }
     }
 
     public void duelistSkipStartBattle(Side side) {
         if (side == Side.LEFT) {
             this.phase = Phase.RIGHT_DRAW;
-            boardcast(String.format("%s Skip Battle. Switch to %s", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
+            boardcast(String.format("L0 %s Skip Battle. Switch duelist, waiting for %s Draw", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
         } else {
             this.phase = Phase.LEFT_DRAW;
-            boardcast(String.format("%s Skip Battle. Switch to %s", Emoji3.TRIDENT_EMBLEM, left.getDuelist().getName()));
+            boardcast(String.format("R0 %s Skip Battle. Switch duelist, waiting for %s Draw", Emoji3.TRIDENT_EMBLEM, left.getDuelist().getName()));
         }
     }
 
@@ -178,7 +178,7 @@ public class DuelField {
         if (firstRound) {
             this.firstRound = false;
             this.phase = Phase.RIGHT_DRAW;
-            boardcast(String.format("%s Skip First Round Battle. Switch to %s", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
+            boardcast(String.format("L0 %s Skip First Round Battle. Switch duelist, waiting for %s Draw", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
         }
     }
 
@@ -194,11 +194,11 @@ public class DuelField {
         if (side == Side.LEFT) {
             left.duelistStartBattle(uuid, right);
             this.phase = Phase.RIGHT_DRAW;
-            boardcast(String.format("%s Finished Battle. Switch to %s", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
+            boardcast(String.format("L6 %s Finished Battle. Switch duelist, waiting for %s Draw", Emoji3.TRIDENT_EMBLEM, right.getDuelist().getName()));
         } else {
             right.duelistStartBattle(uuid, left);
             this.phase = Phase.LEFT_DRAW;
-            boardcast(String.format("%s Finished Battle. Switch to %s", Emoji3.TRIDENT_EMBLEM, left.getDuelist().getName()));
+            boardcast(String.format("R6 %s Finished Battle. Switch duelist, waiting for %s Draw", Emoji3.TRIDENT_EMBLEM, left.getDuelist().getName()));
         }
     }
 

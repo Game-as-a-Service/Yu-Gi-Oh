@@ -49,7 +49,7 @@ public class DuelFieldController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelField:join")
-    public Map<String, String> joinFuelField(Principal principal) {
+    public Map<String, String> joinDuelField(Principal principal) {
         final Duelist duelist = new Duelist(principal.getName());
         final Zone zone = new Zone(duelist);
 

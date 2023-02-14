@@ -100,7 +100,7 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "cdba5b3e-be63-4b96-997a-962670991a18"
+  "uuid": "257b6fb6-875a-449a-a8ae-e12b9a4b175a"
 }
 
 
@@ -110,12 +110,12 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "31fbedcd-df7e-4b5c-bb78-cff0a48a10dd"
+  "uuid": "e683066b-7344-44ae-9ae7-01cffaaa7dd1"
 }
 
 
 ### Vincent Cover Trap
-POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/LEFT:coverTrap
+POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/LEFT:coverTrap?skip=true
 Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
@@ -131,7 +131,7 @@ Authorization: Bearer {{bearerTokenV}}
 Content-Type: application/json
 
 {
-  "uuid": "0f11eac8-2a89-45fb-bde8-9a157694e843"
+  "uuid": "06474d38-00e3-4e6c-a9bc-4c5e09c10630"
 }
 
 
@@ -146,12 +146,12 @@ Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
 {
-  "uuid": "64967479-cd92-4b8d-88d8-ce4f3804e3c0"
+  "uuid": "0cb87c23-6343-49c7-9187-56c43bb07f3d"
 }
 
 
 ### qrtt1 Apply Spell
-POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:applySpell
+POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:applySpell?skip=true
 Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
@@ -166,13 +166,13 @@ Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
 {
-  "uuid": "13a0291b-74b6-4c9a-ba68-f7f0cb7e31bb",
+  "uuid": "c33946ce-511a-48a2-99e2-26cee99a787e",
   "state": "BACK"
 }
 
 
 ### qrtt1 Start Battle
-POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:startBattle
+POST http://localhost:8080/java/api/v1.0/duelField/{{uuid}}/RIGHT:startBattle?skip=true
 Authorization: Bearer {{bearerTokenQ}}
 Content-Type: application/json
 
