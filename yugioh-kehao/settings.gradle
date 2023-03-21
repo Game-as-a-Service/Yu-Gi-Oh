@@ -6,7 +6,7 @@ pluginManagement {
     }
 }
 rootProject.name = 'yugioh'
-include 'framework'
+include 'interface_adapter'
 include 'application'
 include 'domain'
 

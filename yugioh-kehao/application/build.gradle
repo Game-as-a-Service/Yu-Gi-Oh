@@ -1,5 +1,7 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'org.jetbrains.kotlin.plugin.lombok' version '1.8.10'
+    id 'io.freefair.lombok' version '5.3.0'
 }
 
 group 'tw.gaas.yugioh'
@@ -11,8 +13,10 @@ repositories {
 }
 
 dependencies {
+    implementation project(path: ':domain')
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 test {
