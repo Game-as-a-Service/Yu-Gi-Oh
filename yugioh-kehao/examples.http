@@ -1,9 +1,47 @@
+### 測試應用是否運作正常
 GET http://localhost:8080/api/ping
 Accept: text/plain
 
-###
+### User A 要求可用對局
+POST http://localhost:8080/api/games:find
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic {{userAName}} {{userAPassword}}
+
+{}
+
+> {%
+    client.global.set("gameId", response.body.json.game.id);
+%}
+
+### 取得 User A 的對局資訊
 GET http://localhost:8080/api/games/{{gameId}}
 Accept: application/json
+Authorization: Basic {{userAName}} {{userAPassword}}
 
-###
+> {%
+    client.test("The request executed successfully.", () => {
+        client.assert(response.status === 200, "The response status is not 200.");
+    });
 
+    client.test("The response content-type is JSON.", () => {
+        const type = response.contentType.mimeType;
+        client.assert(type === "application/json", `Expected 'application/json' but received ${type}.`);
+    });
+%}
+
+### User B 要求可用對局
+POST http://localhost:8080/api/games:find
+Content-Type: application/json
+Accept: application/json
+Authorization: Basic {{userBName}} {{userBPassword}}
+
+{}
+
+> {%
+    client.test("The obtained game ID is the same.", () => {
+        client.assert(
+            client.global.get("gameId") === response.body.json.game.id,
+            "The obtained game ID is not the same as player A's.");
+    });
+%}

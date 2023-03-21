@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,25 +22,29 @@ import javax.validation.Valid
 interface GamesApi {
     @Operation(
         summary = "尋找可用的對局",
-        description = "尋找可用的對局 - 若有等待成立的對局，則加入既有等待玩家加入的對局 - 若無等待成立的對局，則創立新對局等待其他玩家加入",
+        description = "尋找可用的對局 " +
+                "- 若有等待成立的對局，則加入既有等待玩家加入的對局 " +
+                "- 若無等待成立的對局，則創立新對局等待其他玩家加入",
         tags = ["game"]
     )
     @ApiResponses(
-        value = [ApiResponse(
-            responseCode = "200",
-            description = "回應可用的對局",
-            content = arrayOf(
-                Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = FindAvailableGameResp::class)
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "回應可用的對局",
+                content = arrayOf(
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = FindAvailableGameResp::class)
+                    )
                 )
             )
-        )]
+        ]
     )
     @RequestMapping(
-        value = ["/api/games/find"],
-        produces = ["application/json"],
-        consumes = ["application/json"],
+        value = ["/api/games:find"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
         method = [RequestMethod.POST]
     )
     fun findAvailableGame(
@@ -55,18 +60,24 @@ interface GamesApi {
         tags = ["game"]
     )
     @ApiResponses(
-        value = [ApiResponse(
-            responseCode = "200",
-            description = "回應指定的對局",
-            content = arrayOf(
-                Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = GetSpecifiedGameResp::class)
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "回應指定的對局",
+                content = arrayOf(
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = GetSpecifiedGameResp::class)
+                    )
                 )
             )
-        )]
+        ]
     )
-    @RequestMapping(value = ["/api/games/{gameId}"], produces = ["application/json"], method = [RequestMethod.GET])
+    @RequestMapping(
+        value = ["/api/games/{gameId}"],
+        produces = ["application/json"],
+        method = [RequestMethod.GET]
+    )
     fun getGameGameId(
         @Parameter(
             `in` = ParameterIn.PATH,

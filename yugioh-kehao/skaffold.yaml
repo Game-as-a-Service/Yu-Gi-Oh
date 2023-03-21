@@ -14,3 +14,9 @@ manifests:
   - k8s/*.yaml
 deploy:
   kubectl: {}
+portForward:
+  - resourceType: deployment
+    resourceName: yugioh
+    namespace: default
+    port: 8080
+    localPort: 8080

@@ -12,20 +12,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher
+import org.springframework.security.web.util.matcher.RegexRequestMatcher.regexMatcher
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector
 
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 class SecurityConfig {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests()
             .requestMatchers("/api/ping").permitAll()
-            .requestMatchers("/api/**").hasAuthority("USER")
-            .and()
-            .formLogin()
-            .loginPage("/login").permitAll()
+            .requestMatchers("/api/**").hasAuthority("ROLE_USER")
+            .and().httpBasic()
+            .and().csrf().disable()
         return http.build()
     }
 
