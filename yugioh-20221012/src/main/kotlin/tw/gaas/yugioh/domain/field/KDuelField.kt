@@ -1,7 +1,7 @@
 package tw.gaas.yugioh.domain.field
 
+import tw.gaas.yugioh.data.enu.Phase
 import tw.gaas.yugioh.domain.card.KCard
-import tw.gaas.yugioh.domain.card.enu.Phase
 
 data class KDuelField(
     val left: KZone,

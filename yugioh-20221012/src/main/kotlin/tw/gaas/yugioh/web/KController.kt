@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RestController
 class KController {
 
     @GetMapping("/status")
-    fun getStatus() = "Hello KDuels! ${Emoji2.MILITARY_MEDAL}"
+    fun getStatus() = "Hello KDuelist! ${Emoji2.MILITARY_MEDAL}${Emoji2.MILITARY_MEDAL}${Emoji2.MILITARY_MEDAL}"
 }

@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: yugioh
+build:
+  artifacts:
+  - image: docker.io/hhnj/yugioh
+    context: .
+    jib:
+      project: interface_adapter
+      type: gradle
+manifests:
+  rawYaml:
+  - k8s/*.yaml
+deploy:
+  kubectl: {}
+portForward:
+  - resourceType: deployment
+    resourceName: yugioh
+    namespace: default
+    port: 8080
+    localPort: 8080
