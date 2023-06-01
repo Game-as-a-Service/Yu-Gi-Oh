@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "tw.wsa"
+group = "tw.wsa.gaas"
 version = "1.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
