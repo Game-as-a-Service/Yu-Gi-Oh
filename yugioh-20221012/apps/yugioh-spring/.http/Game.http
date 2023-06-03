@@ -1,0 +1,18 @@
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/games:login
+Content-Type: application/json
+
+{
+  "username": "vincent",
+  "password": "123456"
+}
+
+> {%
+    client.global.set("token", response.body.toString());
+    client.global.set("memberUuid", "154937221093261312");
+%}
+
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/games:login
+Content-Type: application/json
+Authorization: Bearer {{token}}
