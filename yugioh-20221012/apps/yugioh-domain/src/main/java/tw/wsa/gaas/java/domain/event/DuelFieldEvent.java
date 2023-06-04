@@ -1,10 +1,16 @@
 package tw.wsa.gaas.java.domain.event;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import tw.wsa.gaas.java.domain.entity.EntityId;
+
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DuelFieldEvent implements DomainEvent {
 
-    private final String duelFieldUuid;
-
-    public DuelFieldEvent(String duelFieldUuid) {
-        this.duelFieldUuid = duelFieldUuid;
-    }
+    EntityId entityId;
 }

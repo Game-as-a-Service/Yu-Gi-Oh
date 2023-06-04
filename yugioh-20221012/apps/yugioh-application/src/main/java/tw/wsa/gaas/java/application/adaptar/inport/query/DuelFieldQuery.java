@@ -1,4 +1,5 @@
-package tw.wsa.gaas.java.spring.config.security;
+package tw.wsa.gaas.java.application.adaptar.inport.query;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsernamePasswordPairDTO {
+public class DuelFieldQuery {
 
-    private String username;
-    private String password;
+    private String uuid;
 }

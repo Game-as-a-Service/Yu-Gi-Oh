@@ -1,15 +1,19 @@
 package tw.wsa.gaas.java.domain.entity;
 
+import lombok.*;
 import tw.wsa.gaas.java.domain.enu.Phase;
 import tw.wsa.gaas.java.domain.enu.Side;
 import tw.wsa.gaas.java.domain.enu.State;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.vo.Zone;
 
-public class DuelField {
+@Builder(toBuilder = true)
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class DuelField extends DomainEntity {
 
-    // UUID
-    private final String uuid;
     // 左邊場地
     private Zone left;
     // 右邊場地
@@ -19,23 +23,14 @@ public class DuelField {
     // 是否為第一回合
     private Boolean firstRound = true;
 
-    private DuelField(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public static DuelField create(String uuid) {
-        return new DuelField(uuid);
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
     public DuelFieldEvent prepareLeftZone(Zone left) {
         this.left = left;
         this.phase = Phase.INIT;
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent prepareRightZone(Zone zone) {
@@ -44,7 +39,10 @@ public class DuelField {
         this.right.start();
         this.phase = Phase.LEFT_DRAW;
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent drawCard(
@@ -58,7 +56,10 @@ public class DuelField {
             this.phase = Phase.RIGHT_MONSTER;
         }
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent summonMonster(
@@ -75,7 +76,10 @@ public class DuelField {
             this.phase = Phase.RIGHT_SPELL;
         }
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent applySpell(
@@ -92,7 +96,10 @@ public class DuelField {
             this.phase = Phase.RIGHT_TRAP;
         }
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent coverTrap(
@@ -109,7 +116,10 @@ public class DuelField {
             this.phase = Phase.RIGHT_BATTLE;
         }
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 
     public DuelFieldEvent startBattle(
@@ -128,6 +138,9 @@ public class DuelField {
             phase = Phase.LEFT_DRAW;
         }
 
-        return new DuelFieldEvent(uuid);
+        return DuelFieldEvent
+                .builder()
+                .entityId(entityId)
+                .build();
     }
 }

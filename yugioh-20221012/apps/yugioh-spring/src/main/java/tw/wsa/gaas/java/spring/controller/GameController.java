@@ -5,15 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tw.wsa.gaas.java.application.adaptar.inport.command.JoinDuelFieldCommand;
+import tw.wsa.gaas.java.application.usecase.command.DuelFieldCommandUseCase;
+import tw.wsa.gaas.java.application.usecase.query.DuelFieldQueryUseCase;
 import tw.wsa.gaas.java.spring.config.security.JwtTokenService;
 import tw.wsa.gaas.java.spring.config.security.UsernamePasswordPairDTO;
+import tw.wsa.gaas.java.spring.controller.presenter.DuelFieldPresenter;
+import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Slf4j
@@ -23,6 +30,8 @@ import java.util.UUID;
 public class GameController {
 
     private final AuthenticationManager authenticationManager;
+    private final DuelFieldCommandUseCase duelFieldCommandUseCase;
+    private final DuelFieldQueryUseCase duelFieldQueryUseCase;
     private final JwtTokenService jwtTokenService;
 
     @PostMapping("/games:login")
@@ -50,17 +59,18 @@ public class GameController {
     // POST /games/{uuid}:coverTrap
     // POST /games/{uuid}:startBattle
 
-//    private final DuelFieldUseCase duelFieldUseCase;
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields:join")
-//    public ResponseEntity<String> joinDuelField(Principal principal) {
-//
-//
-//
-//        return ResponseEntity.ok(duelFieldUseCase.join(principal.getName()));
-//    }
-//
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields:join")
+    public ResponseEntity<DuelFieldView> joinDuelField(Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldCommandUseCase.joinDuelField(
+                JoinDuelFieldCommand.builder().duelFieldName(principal.getName()).build(),
+                duelFieldPresenter
+        );
+
+        return duelFieldPresenter.retrieveDuelField();
+    }
+
 //    @PreAuthorize("hasRole('USER')")
 //    @PostMapping("/duelFields/{uuid}:drawCard")
 //    public ResponseEntity<Boolean> duelistDrawCard(
