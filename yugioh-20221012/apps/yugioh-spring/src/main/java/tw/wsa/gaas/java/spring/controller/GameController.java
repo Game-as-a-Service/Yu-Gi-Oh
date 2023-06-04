@@ -1,5 +1,6 @@
 package tw.wsa.gaas.java.spring.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -8,20 +9,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import tw.wsa.gaas.java.application.adaptar.inport.command.JoinDuelFieldCommand;
-import tw.wsa.gaas.java.application.usecase.command.DuelFieldCommandUseCase;
-import tw.wsa.gaas.java.application.usecase.query.DuelFieldQueryUseCase;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import tw.wsa.gaas.java.application.adapter.inport.command.DuelFieldCommand;
+import tw.wsa.gaas.java.application.adapter.inport.query.DuelFieldQuery;
+import tw.wsa.gaas.java.application.usecase.DuelFieldUseCase;
+import tw.wsa.gaas.java.domain.enu.CommandType;
 import tw.wsa.gaas.java.spring.config.security.JwtTokenService;
 import tw.wsa.gaas.java.spring.config.security.UsernamePasswordPairDTO;
 import tw.wsa.gaas.java.spring.controller.presenter.DuelFieldPresenter;
 import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,9 +37,10 @@ import java.util.UUID;
 public class GameController {
 
     private final AuthenticationManager authenticationManager;
-    private final DuelFieldCommandUseCase duelFieldCommandUseCase;
-    private final DuelFieldQueryUseCase duelFieldQueryUseCase;
+    private final ConcurrentHashMap<String, List<SseEmitter>> duelFieldUuidAndSseEmitters = new ConcurrentHashMap<>();
+    private final DuelFieldUseCase duelFieldUseCase;
     private final JwtTokenService jwtTokenService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/games:login")
     public ResponseEntity<String> login(@RequestBody UsernamePasswordPairDTO usernamePasswordPairDTO) {
@@ -50,107 +58,114 @@ public class GameController {
                 .body(jwt);
     }
 
-    // POST /games:join
-    // GET /games/{uuid}
-    // GET /games/{uuid}/sse
-    // POST /games/{uuid}:drawCard
-    // POST /games/{uuid}:summonMonster
-    // POST /games/{uuid}:applySpell
-    // POST /games/{uuid}:coverTrap
-    // POST /games/{uuid}:startBattle
-
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/duelFields:join")
-    public ResponseEntity<DuelFieldView> joinDuelField(Principal principal) {
+    @GetMapping("/duelField/{uuid}")
+    public ResponseEntity<DuelFieldView> queryDuelField(@PathVariable String uuid, Principal principal) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldCommandUseCase.joinDuelField(
-                JoinDuelFieldCommand.builder().duelFieldName(principal.getName()).build(),
+        duelFieldUseCase.execute(
+                DuelFieldQuery.builder().uuid(uuid).build(),
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveDuelField();
+        return duelFieldPresenter.retrieveResponse();
     }
 
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields/{uuid}:drawCard")
-//    public ResponseEntity<Boolean> duelistDrawCard(
-//            @PathVariable String uuid,
-//            @RequestParam(required = false, defaultValue = "false") Boolean skip,
-//            Principal principal
-//    ) {
-//        return ResponseEntity.ok(duelFieldUseCase.drawCard(uuid, principal.getName(), skip));
-//    }
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields/{uuid}:summonMonster")
-//    public ResponseEntity<Boolean> duelistSummonMonster(
-//            @PathVariable String uuid,
-//            @RequestParam(required = false, defaultValue = "false") Boolean skip,
-//            @RequestBody CardReqDTO cardReqDto,
-//            Principal principal) {
-//        return ResponseEntity.ok(duelFieldUseCase.summonMonster(uuid, principal.getName(), skip, cardReqDto));
-//    }
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields/{uuid}:applySpell")
-//    public ResponseEntity<Boolean> duelistApplySpell(
-//            @PathVariable String uuid,
-//            @RequestParam(required = false, defaultValue = "false") Boolean skip,
-//            @RequestBody CardReqDTO cardReqDto,
-//            Principal principal
-//    ) {
-//        return ResponseEntity.ok(duelFieldUseCase.applySpell(uuid, principal.getName(), skip, cardReqDto));
-//    }
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields/{uuid}:coverTrap")
-//    public ResponseEntity<Boolean> duelistCoverTrap(
-//            @PathVariable String uuid,
-//            @RequestParam(required = false, defaultValue = "false") Boolean skip,
-//            @RequestBody CardReqDTO cardReqDto,
-//            Principal principal
-//    ) {
-//        return ResponseEntity.ok(duelFieldUseCase.coverTrap(uuid, principal.getName(), skip, cardReqDto));
-//    }
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @PostMapping("/duelFields/{uuid}:startBattle")
-//    public ResponseEntity<Boolean> duelistStartBattle(
-//            @PathVariable String uuid,
-//            @RequestParam(required = false, defaultValue = "false") Boolean skip,
-//            @RequestBody CardReqDTO cardReqDto,
-//            Principal principal) {
-//        return ResponseEntity.ok(duelFieldUseCase.startBattle(uuid, principal.getName(), skip, cardReqDto));
-//    }
-//
-//
-//
-////    @PreAuthorize("hasRole('USER')")
-////    @GetMapping("/duelField/{uuid}")
-////    public DuelFieldViewDTO queryDuelField(
-////            @PathVariable String uuid,
-////            Principal principal) {
-////
-////        return findDuelFieldByUuid(uuid).toDto(
-////                findDuelFieldByUuid(uuid).checkIsDuelist(Side.LEFT, principal.getName()),
-////                findDuelFieldByUuid(uuid).checkIsDuelist(Side.RIGHT, principal.getName())
-////        );
-////    }
-////
-////    @PreAuthorize("hasRole('USER')")
-////    @GetMapping("/duelField/{uuid}:sse")
-////    public SseEmitter listenDuelField(@PathVariable String uuid) throws IOException {
-////        final SseEmitter sseEmitter = new SseEmitter(0L);
-////        sseEmitter.send(
-////                SseEmitter
-////                        .event()
-////                        .id(LocalDateTime.now().toString())
-////                        .name("Connected, you're listening " + uuid + " duel field.")
-////                        .reconnectTime(1000)
-////        );
-////
-////        return networkManager.register(uuid, sseEmitter);
-////    }
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/duelField/{uuid}:sse")
+    public SseEmitter queryDuelFieldSse(@PathVariable String uuid) throws IOException {
+        final SseEmitter sseEmitter = new SseEmitter(0L);
+        sseEmitter.send(
+                SseEmitter
+                        .event()
+                        .id(LocalDateTime.now().toString())
+                        .name("Connected, you're listening " + uuid + " duel field.")
+                        .reconnectTime(1000)
+        );
 
+        if (duelFieldUuidAndSseEmitters.containsKey(uuid)) duelFieldUuidAndSseEmitters.get(uuid).add(sseEmitter);
+        else duelFieldUuidAndSseEmitters.put(uuid, List.of(sseEmitter));
 
+        return sseEmitter;
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields:join")
+    public ResponseEntity<DuelFieldView> join(Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid("").duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields/{uuid}:drawCard")
+    public ResponseEntity<DuelFieldView> drawCard(@PathVariable String uuid, Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid(uuid).duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields/{uuid}:summonMonster")
+    public ResponseEntity<DuelFieldView> summonMonster(@PathVariable String uuid, Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid(uuid).duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields/{uuid}:applySpell")
+    public ResponseEntity<DuelFieldView> applySpell(@PathVariable String uuid, Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid(uuid).duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields/{uuid}:coverTrap")
+    public ResponseEntity<DuelFieldView> coverTrap(@PathVariable String uuid, Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid(uuid).duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/duelFields/{uuid}:startBattle")
+    public ResponseEntity<DuelFieldView> startBattle(@PathVariable String uuid, Principal principal) {
+        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
+        duelFieldUseCase.execute(DuelFieldCommand.builder().commandType(CommandType.JOIN).uuid(uuid).duelistName(principal.getName()).build(), duelFieldPresenter);
+
+        return duelFieldPresenter.retrieveResponse();
+    }
+
+//    @Scheduled(cron = "*/5 * * * * *")
+    void broadcastDuelFieldsTask() {
+        duelFieldUseCase
+                .fetchAll()
+                .stream()
+                .collect(Collectors.groupingBy(duelField -> duelField.getEntityId().getUuid()))
+                .forEach((uuid, duelFields) ->
+                        Optional
+                                .ofNullable(duelFieldUuidAndSseEmitters.get(uuid))
+                                .ifPresent(emitters -> emitters
+                                        .forEach(emitter -> {
+                                            try {
+                                                emitter.send(
+                                                        SseEmitter
+                                                                .event()
+                                                                .id(OffsetDateTime.now().toString())
+                                                                .name(String.format("Game:%s", uuid))
+                                                                .data(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new DuelFieldView(duelFields.get(0))))
+                                                );
+                                            } catch (IOException ex) {
+                                                log.error(ex.getMessage(), ex);
+                                            }
+                                        })
+                                )
+                );
+    }
 }

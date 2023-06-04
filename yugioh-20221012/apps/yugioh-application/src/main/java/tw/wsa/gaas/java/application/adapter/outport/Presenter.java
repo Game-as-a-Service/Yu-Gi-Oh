@@ -1,4 +1,4 @@
-package tw.wsa.gaas.java.application.adaptar.outport;
+package tw.wsa.gaas.java.application.adapter.outport;
 
 import java.util.List;
 

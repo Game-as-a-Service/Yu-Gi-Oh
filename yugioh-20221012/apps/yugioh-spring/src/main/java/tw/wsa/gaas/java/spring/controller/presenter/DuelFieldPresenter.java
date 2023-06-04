@@ -1,7 +1,7 @@
 package tw.wsa.gaas.java.spring.controller.presenter;
 
 import org.springframework.http.ResponseEntity;
-import tw.wsa.gaas.java.application.adaptar.outport.Presenter;
+import tw.wsa.gaas.java.application.adapter.outport.Presenter;
 import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class DuelFieldPresenter implements Presenter {
         return null;
     }
 
-    public ResponseEntity<DuelFieldView> retrieveDuelField() {
+    public ResponseEntity<DuelFieldView> retrieveResponse() {
         return viewModelOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

@@ -1,6 +1,6 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
-import tw.wsa.gaas.java.domain.enu.Type;
+import tw.wsa.gaas.java.domain.enu.CardType;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 
 import java.util.function.Function;
@@ -25,7 +25,7 @@ public class HandCards extends Cards {
                 .collect(Collectors.toMap(Card::getUuid, Function.identity()))
                 .get(uuid);
 
-        return null != card && card.getType() == Type.MONSTER;
+        return null != card && card.getType() == CardType.MONSTER;
     }
 
     public Card submit(String uuid) {
@@ -44,7 +44,7 @@ public class HandCards extends Cards {
                 .collect(Collectors.toMap(Card::getUuid, Function.identity()))
                 .get(uuid);
 
-        return null != card && card.getType() == Type.SPELL;
+        return null != card && card.getType() == CardType.SPELL;
     }
 
     public boolean containsThisTrapCard(String uuid) {
@@ -53,6 +53,6 @@ public class HandCards extends Cards {
                 .collect(Collectors.toMap(Card::getUuid, Function.identity()))
                 .get(uuid);
 
-        return null != card && card.getType() == Type.TRAP;
+        return null != card && card.getType() == CardType.TRAP;
     }
 }

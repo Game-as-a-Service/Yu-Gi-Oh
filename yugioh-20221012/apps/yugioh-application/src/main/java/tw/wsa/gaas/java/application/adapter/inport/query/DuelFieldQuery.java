@@ -1,4 +1,5 @@
-package tw.wsa.gaas.java.application.adaptar.inport.command;
+package tw.wsa.gaas.java.application.adapter.inport.query;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinDuelFieldCommand {
+public class DuelFieldQuery {
 
-    private String duelFieldName;
+    private String uuid;
 }

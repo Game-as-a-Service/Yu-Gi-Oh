@@ -1,7 +1,7 @@
 package tw.wsa.gaas.java.domain.vo.card;
 
+import tw.wsa.gaas.java.domain.enu.CardType;
 import tw.wsa.gaas.java.domain.enu.State;
-import tw.wsa.gaas.java.domain.enu.Type;
 
 public abstract class Card {
 
@@ -12,7 +12,7 @@ public abstract class Card {
     // 名稱
     protected String name;
     // 類型
-    protected Type type;
+    protected CardType cardType;
     // 描述
     protected String description;
 
@@ -24,7 +24,7 @@ public abstract class Card {
         return uuid;
     }
 
-    public Type getType() {
-        return type;
+    public CardType getType() {
+        return cardType;
     }
 }

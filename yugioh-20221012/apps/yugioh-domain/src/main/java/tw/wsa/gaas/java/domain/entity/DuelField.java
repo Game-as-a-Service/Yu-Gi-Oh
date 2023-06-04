@@ -7,6 +7,9 @@ import tw.wsa.gaas.java.domain.enu.State;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.vo.Zone;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -22,6 +25,19 @@ public class DuelField extends DomainEntity {
     private Phase phase;
     // 是否為第一回合
     private Boolean firstRound = true;
+
+    private DuelField(String uuid, String duelistName) {
+        entityId = EntityId
+                .builder()
+                .uuid(uuid)
+                .createdBy(duelistName)
+                .createdDate(Instant.now().toEpochMilli())
+                .build();
+    }
+
+    public static DuelField create(String duelistName) {
+        return new DuelField(UUID.randomUUID().toString(), "duelistName");
+    }
 
     public DuelFieldEvent prepareLeftZone(Zone left) {
         this.left = left;

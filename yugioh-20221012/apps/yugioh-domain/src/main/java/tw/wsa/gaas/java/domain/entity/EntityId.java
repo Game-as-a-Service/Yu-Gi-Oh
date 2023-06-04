@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class EntityId {
+public class EntityId {
 
     String uuid;
     String createdBy;
