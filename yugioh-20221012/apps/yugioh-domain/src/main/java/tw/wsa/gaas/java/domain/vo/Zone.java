@@ -1,6 +1,6 @@
 package tw.wsa.gaas.java.domain.vo;
 
-import tw.wsa.gaas.java.domain.enu.State;
+import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
 import tw.wsa.gaas.java.domain.vo.cards.Deck;
@@ -63,10 +63,10 @@ public class Zone {
 
     public void duelistSummonMonster(
             String uuid,
-            State state
+            CardState cardState
     ) {
         Card card = duelist.summonMonster(uuid);
-        monsterCards.summon(card, state);
+        monsterCards.summon(card, cardState);
     }
 
     public void duelistApplySpell(String uuid) {
@@ -77,10 +77,10 @@ public class Zone {
 
     public void duelistCoverTrap(
             String uuid,
-            State state
+            CardState cardState
     ) {
         final Card card = duelist.coverTrap(uuid);
-        spellAndTrapCards.cover(card, state);
+        spellAndTrapCards.cover(card, cardState);
     }
 
     public void duelistStartBattle(

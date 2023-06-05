@@ -1,9 +1,9 @@
 package tw.wsa.gaas.java.domain.entity;
 
 import lombok.*;
+import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.Phase;
 import tw.wsa.gaas.java.domain.enu.Side;
-import tw.wsa.gaas.java.domain.enu.State;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.vo.Zone;
 
@@ -36,7 +36,7 @@ public class DuelField extends DomainEntity {
     }
 
     public static DuelField create(String duelistName) {
-        return new DuelField(UUID.randomUUID().toString(), "duelistName");
+        return new DuelField(UUID.randomUUID().toString(), duelistName);
     }
 
     public DuelFieldEvent prepareLeftZone(Zone left) {
@@ -62,9 +62,8 @@ public class DuelField extends DomainEntity {
     }
 
     public DuelFieldEvent drawCard(
-            Side side,
             String duelistName) {
-        if (side == Side.LEFT) {
+        if (duelistName.equals(left.getDuelist().getName())) {
             left.duelistDraw();
             this.phase = Phase.LEFT_MONSTER;
         } else {
@@ -80,15 +79,14 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent summonMonster(
             Boolean skip,
-            Side side,
-            String uuid,
-            State state,
+            String cardUuid,
+            CardState cardState,
             String duelistName) {
-        if (side == Side.LEFT) {
-            if (!skip) left.duelistSummonMonster(uuid, state);
+        if (duelistName.equals(left.getDuelist().getName())) {
+            if (!skip) left.duelistSummonMonster(cardUuid, cardState);
             this.phase = Phase.LEFT_SPELL;
         } else {
-            if (!skip) right.duelistSummonMonster(uuid, state);
+            if (!skip) right.duelistSummonMonster(cardUuid, cardState);
             this.phase = Phase.RIGHT_SPELL;
         }
 
@@ -100,15 +98,13 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent applySpell(
             Boolean skip,
-            Side side,
-            String uuid,
-            State state,
+            String cardUuid,
             String duelistName) {
-        if (side == Side.LEFT) {
-            if (!skip) left.duelistApplySpell(uuid);
+        if (duelistName.equals(left.getDuelist().getName())) {
+            if (!skip) left.duelistApplySpell(cardUuid);
             this.phase = Phase.LEFT_TRAP;
         } else {
-            if (!skip) right.duelistApplySpell(uuid);
+            if (!skip) right.duelistApplySpell(cardUuid);
             this.phase = Phase.RIGHT_TRAP;
         }
 
@@ -120,15 +116,14 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent coverTrap(
             Boolean skip,
-            Side side,
-            String uuid,
-            State state,
+            String cardUuid,
+            CardState cardState,
             String duelistName) {
-        if (side == Side.LEFT) {
-            if (!skip) left.duelistCoverTrap(uuid, state);
+        if (duelistName.equals(left.getDuelist().getName())) {
+            if (!skip) left.duelistCoverTrap(cardUuid, cardState);
             this.phase = Phase.LEFT_BATTLE;
         } else {
-            if (!skip) right.duelistCoverTrap(uuid, state);
+            if (!skip) right.duelistCoverTrap(cardUuid, cardState);
             this.phase = Phase.RIGHT_BATTLE;
         }
 
@@ -140,17 +135,16 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent startBattle(
             Boolean skip,
-            Side side,
-            String uuid,
+            String cardUuid,
             String duelistName) {
-        if (side == Side.LEFT) {
+        if (duelistName.equals(left.getDuelist().getName())) {
             if (!firstRound && !skip) {
                 firstRound = false;
-                left.duelistStartBattle(uuid, right);
+                left.duelistStartBattle(cardUuid, right);
             }
             phase = Phase.RIGHT_DRAW;
         } else {
-            if (!skip) right.duelistStartBattle(uuid, left);
+            if (!skip) right.duelistStartBattle(cardUuid, left);
             phase = Phase.LEFT_DRAW;
         }
 

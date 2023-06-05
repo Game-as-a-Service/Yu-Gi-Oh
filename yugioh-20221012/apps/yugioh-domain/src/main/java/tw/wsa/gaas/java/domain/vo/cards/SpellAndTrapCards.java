@@ -1,6 +1,6 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
-import tw.wsa.gaas.java.domain.enu.State;
+import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 
 /**
@@ -12,8 +12,8 @@ public class SpellAndTrapCards extends Cards {
         limit = 5;
     }
 
-    public void cover(Card card, State state) {
-        card.changeState(state);
+    public void cover(Card card, CardState cardState) {
+        card.changeState(cardState);
 
         elements.add(card);
     }

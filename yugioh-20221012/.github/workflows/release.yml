@@ -1,0 +1,30 @@
+#name: Release
+#
+#on:
+#    release:
+#        types: [ created ]
+#
+#jobs:
+#    yugioh-spring:
+#        runs-on: ubuntu-latest
+#
+#        steps:
+#            -   name: Checkout
+#                uses: actions/checkout@v3
+#
+#            -   name: Setup Java
+#                uses: actions/setup-java@v3
+#                with:
+#                    distribution: "temurin"
+#                    java-version: "17"
+#                    check-latest: true
+#                    cache: "gradle"
+#
+#            -   name: Gradle
+#                uses: gradle/gradle-build-action@v2
+#                env:
+#                    GITHUB_REF_NAME: ${{ github.GITHUB_REF_NAME }}
+#                    GITHUB_REPOSITORY_OWNER: ${{ github.GITHUB_REPOSITORY_OWNER }}
+#                    GITHUB_PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+#                with:
+#                    arguments: apps:yugioh-spring:clean apps:yugioh-spring:jib -x apps:yugioh-spring:test --parallel

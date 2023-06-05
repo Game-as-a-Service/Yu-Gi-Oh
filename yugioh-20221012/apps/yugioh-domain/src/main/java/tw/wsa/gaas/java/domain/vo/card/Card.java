@@ -1,14 +1,14 @@
 package tw.wsa.gaas.java.domain.vo.card;
 
+import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.CardType;
-import tw.wsa.gaas.java.domain.enu.State;
 
 public abstract class Card {
 
     // UUID
     protected String uuid;
     // 表示狀態
-    protected State state;
+    protected CardState cardState;
     // 名稱
     protected String name;
     // 類型
@@ -16,8 +16,8 @@ public abstract class Card {
     // 描述
     protected String description;
 
-    public void changeState(State state) {
-        this.state = state;
+    public void changeState(CardState cardState) {
+        this.cardState = cardState;
     }
 
     public String getUuid() {

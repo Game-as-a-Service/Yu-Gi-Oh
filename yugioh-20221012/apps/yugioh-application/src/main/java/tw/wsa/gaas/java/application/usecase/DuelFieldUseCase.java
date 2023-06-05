@@ -6,11 +6,13 @@ import tw.wsa.gaas.java.application.adapter.inport.query.DuelFieldQuery;
 import tw.wsa.gaas.java.application.adapter.outport.Presenter;
 import tw.wsa.gaas.java.domain.entity.DuelField;
 import tw.wsa.gaas.java.domain.entity.EntityId;
+import tw.wsa.gaas.java.domain.event.DomainEvent;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.repository.DuelFieldRepository;
 import tw.wsa.gaas.java.domain.vo.Duelist;
 import tw.wsa.gaas.java.domain.vo.Zone;
 
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,7 @@ public class DuelFieldUseCase {
     }
 
     public void execute(DuelFieldCommand command, Presenter presenter) {
+        // query
         final Optional<DuelField> duelFieldOpt = duelFieldRepository.selectById(EntityId.builder().uuid(command.getUuid()).build());
 
         switch (command.getCommandType()) {
@@ -55,19 +58,113 @@ public class DuelFieldUseCase {
                         });
                 break;
             case DRAW_CARD:
+                duelFieldOpt
+                        // modify
+                        .map(duelField -> {
+                            final DuelFieldEvent duelFieldEvent = duelField.drawCard(command.getDuelistName());
 
+                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                        })
+                        // save
+                        .flatMap(eventAndEntityPair -> {
+                            final DomainEvent event = eventAndEntityPair.getKey();
+                            final DuelField entity = eventAndEntityPair.getValue();
 
+                            return duelFieldRepository.save(entity).map(v -> event);
+                        })
+                        // publish
+                        .map(event -> presenter.present(List.of(event)));
                 break;
             case SUMMON_MONSTER:
+                duelFieldOpt
+                        // modify
+                        .map(duelField -> {
+                            final DuelFieldEvent duelFieldEvent = duelField.summonMonster(
+                                    false,
+                                    command.getCardUuid(),
+                                    command.getCardState(),
+                                    command.getDuelistName()
+                            );
+
+                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                        })
+                        // save
+                        .flatMap(eventAndEntityPair -> {
+                            final DomainEvent event = eventAndEntityPair.getKey();
+                            final DuelField entity = eventAndEntityPair.getValue();
+
+                            return duelFieldRepository.save(entity).map(v -> event);
+                        })
+                        // publish
+                        .map(event -> presenter.present(List.of(event)));
                 break;
             case APPLY_SPELL:
+                duelFieldOpt
+                        // modify
+                        .map(duelField -> {
+                            final DuelFieldEvent duelFieldEvent = duelField.applySpell(
+                                    false,
+                                    command.getCardUuid(),
+                                    command.getDuelistName()
+                            );
+
+                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                        })
+                        // save
+                        .flatMap(eventAndEntityPair -> {
+                            final DomainEvent event = eventAndEntityPair.getKey();
+                            final DuelField entity = eventAndEntityPair.getValue();
+
+                            return duelFieldRepository.save(entity).map(v -> event);
+                        })
+                        // publish
+                        .map(event -> presenter.present(List.of(event)));
                 break;
             case COVER_TRAP:
+                duelFieldOpt
+                        // modify
+                        .map(duelField -> {
+                            final DuelFieldEvent duelFieldEvent = duelField.coverTrap(
+                                    false,
+                                    command.getCardUuid(),
+                                    command.getCardState(),
+                                    command.getDuelistName()
+                            );
+
+                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                        })
+                        // save
+                        .flatMap(eventAndEntityPair -> {
+                            final DomainEvent event = eventAndEntityPair.getKey();
+                            final DuelField entity = eventAndEntityPair.getValue();
+
+                            return duelFieldRepository.save(entity).map(v -> event);
+                        })
+                        // publish
+                        .map(event -> presenter.present(List.of(event)));
                 break;
             case START_BATTLE:
+                duelFieldOpt
+                        // modify
+                        .map(duelField -> {
+                            final DuelFieldEvent duelFieldEvent = duelField.startBattle(
+                                    false,
+                                    command.getCardUuid(),
+                                    command.getDuelistName()
+                            );
+
+                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                        })
+                        // save
+                        .flatMap(eventAndEntityPair -> {
+                            final DomainEvent event = eventAndEntityPair.getKey();
+                            final DuelField entity = eventAndEntityPair.getValue();
+
+                            return duelFieldRepository.save(entity).map(v -> event);
+                        })
+                        // publish
+                        .map(event -> presenter.present(List.of(event)));
                 break;
         }
-
-        duelFieldOpt.map(duelField -> presenter.present(List.of(duelField)));
     }
 }

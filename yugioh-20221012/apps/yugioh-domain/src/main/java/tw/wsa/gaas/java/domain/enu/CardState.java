@@ -3,7 +3,7 @@ package tw.wsa.gaas.java.domain.enu;
 /**
  * 卡片狀態
  */
-public enum State {
+public enum CardState {
 
     // 表側
     FRONT,

@@ -121,7 +121,7 @@ Content-Type: application/json
 
 {
   "uuid": "152927b0-6a4d-4baa-828d-5d65b2ef58a8",
-  "state": "BACK"
+  "cardState": "BACK"
 }
 
 
@@ -167,7 +167,7 @@ Content-Type: application/json
 
 {
   "uuid": "c33946ce-511a-48a2-99e2-26cee99a787e",
-  "state": "BACK"
+  "cardState": "BACK"
 }
 
 

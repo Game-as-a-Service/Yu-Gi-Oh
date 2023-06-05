@@ -1,6 +1,6 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
-import tw.wsa.gaas.java.domain.enu.State;
+import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
 
@@ -19,8 +19,8 @@ public class MonsterCards extends Cards {
         limit = 5;
     }
 
-    public void summon(Card card, State state) {
-        card.changeState(state);
+    public void summon(Card card, CardState cardState) {
+        card.changeState(cardState);
 
         elements.add(card);
     }
