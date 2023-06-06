@@ -37,7 +37,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenAPIVersion")
+    implementation("org.springdoc:springdoc-openapi-ui:$springdocOpenAPIVersion")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")

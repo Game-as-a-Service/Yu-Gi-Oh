@@ -39,7 +39,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/swagger-config").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/java/api/v1.0/duelFields:login").permitAll()
                 .anyRequest().authenticated();
 

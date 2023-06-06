@@ -20,7 +20,7 @@ class YugiohSpringApplication {
     ): CommandLineRunner =
         CommandLineRunner {
             val applicationName = applicationContext.environment.getRequiredProperty("spring.application.name")
-            log.info("http://localhost:8080/$applicationName/swagger-ui.html")
+            log.info("http://localhost:8080/$applicationName/swagger-ui/index.html")
         }
 }
 
