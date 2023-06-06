@@ -1,20 +1,17 @@
 package tw.wsa.gaas.java.domain.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.Phase;
-import tw.wsa.gaas.java.domain.enu.Side;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.vo.Zone;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class DuelField extends DomainEntity {
 
     // 左邊場地
@@ -27,7 +24,7 @@ public class DuelField extends DomainEntity {
     private Boolean firstRound = true;
 
     private DuelField(String uuid, String duelistName) {
-        entityId = EntityId
+        this.entityId = EntityId
                 .builder()
                 .uuid(uuid)
                 .createdBy(duelistName)
@@ -61,8 +58,7 @@ public class DuelField extends DomainEntity {
                 .build();
     }
 
-    public DuelFieldEvent drawCard(
-            String duelistName) {
+    public DuelFieldEvent drawCard(String duelistName) {
         if (duelistName.equals(left.getDuelist().getName())) {
             left.duelistDraw();
             this.phase = Phase.LEFT_MONSTER;

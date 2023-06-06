@@ -23,22 +23,6 @@ public class Duelist {
         this.handCards = new HandCards();
     }
 
-    public Boolean validDuelist(String username) {
-        return this.name.equals(username);
-    }
-
-    public Boolean validDuelistMonsterHandCard(String uuid) {
-        return handCards.containsThisMonsterCard(uuid);
-    }
-
-    public Boolean validDuelistSpellHandCard(String uuid) {
-        return handCards.containsThisSpellCard(uuid);
-    }
-
-    public Boolean validDuelistTrapHandCard(String uuid) {
-        return handCards.containsThisTrapCard(uuid);
-    }
-
     public void drawCards(Card... draw) {
         Arrays.stream(draw).forEach(handCards::draw);
     }

@@ -5,6 +5,7 @@ import tw.wsa.gaas.java.domain.entity.DuelField;
 import tw.wsa.gaas.java.domain.entity.EntityId;
 import tw.wsa.gaas.java.domain.repository.DuelFieldRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,21 @@ public class DuelFieldRepositoryImpl implements DuelFieldRepository {
     private final ConcurrentHashMap<String, DuelField> uuidAndDuelField = new ConcurrentHashMap<>();
 
     @Override
+    public Optional<DuelField> selectById(EntityId entityId) {
+        return Optional.ofNullable(uuidAndDuelField.get(entityId.getUuid()));
+    }
+
+    @Override
+    public List<DuelField> selectAll() {
+        return new ArrayList<>(uuidAndDuelField.values());
+    }
+
+    @Override
+    public Optional<DuelField> selectWaiting() {
+        return Optional.ofNullable(pairPool.poll());
+    }
+
+    @Override
     public Optional<DuelField> insert(DuelField duelField) {
         pairPool.offer(duelField);
         return Optional.of(duelField);
@@ -27,20 +43,5 @@ public class DuelFieldRepositoryImpl implements DuelFieldRepository {
         return uuidAndDuelField.containsKey(duelField.getEntityId().getUuid())
                 ? Optional.of(duelField)
                 : Optional.ofNullable(uuidAndDuelField.put(duelField.getEntityId().getUuid(), duelField));
-    }
-
-    @Override
-    public Optional<DuelField> selectWaiting() {
-        return Optional.ofNullable(pairPool.poll());
-    }
-
-    @Override
-    public Optional<DuelField> selectById(EntityId entityId) {
-        return Optional.ofNullable(uuidAndDuelField.get(entityId.getUuid()));
-    }
-
-    @Override
-    public List<DuelField> selectAll() {
-        return null;
     }
 }

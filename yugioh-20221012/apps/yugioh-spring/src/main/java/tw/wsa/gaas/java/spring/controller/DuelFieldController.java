@@ -1,11 +1,13 @@
 package tw.wsa.gaas.java.spring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,6 +44,7 @@ public class DuelFieldController {
     private final JwtTokenService jwtTokenService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Operation(summary = "決鬥者登入")
     @PostMapping("/duelFields:login")
     public ResponseEntity<String> login(@RequestBody UsernamePasswordPairDTO usernamePasswordPairDTO) {
         authenticationManager.authenticate(
@@ -58,6 +61,7 @@ public class DuelFieldController {
                 .body(jwt);
     }
 
+    @Operation(summary = "查詢決鬥場")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/duelFields/{uuid}")
     public ResponseEntity<DuelFieldView> queryDuelField(@PathVariable String uuid) {
@@ -70,6 +74,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "查詢決鬥場SSE")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/duelFields/{uuid}:sse")
     public SseEmitter queryDuelFieldSse(@PathVariable String uuid) throws IOException {
@@ -91,6 +96,7 @@ public class DuelFieldController {
         return sseEmitter;
     }
 
+    @Operation(summary = "加入決鬥，自動配對")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields:join")
     public ResponseEntity<DuelFieldView> join(Principal principal) {
@@ -106,6 +112,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "決鬥中，抽卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:drawCard")
     public ResponseEntity<DuelFieldView> drawCard(
@@ -125,6 +132,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "決鬥中，召喚怪獸")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:summonMonster")
     public ResponseEntity<DuelFieldView> summonMonster(
@@ -149,6 +157,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "決鬥中，使用魔法卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:applySpell")
     public ResponseEntity<DuelFieldView> applySpell(
@@ -173,6 +182,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "決鬥中，覆蓋陷阱卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:coverTrap")
     public ResponseEntity<DuelFieldView> coverTrap(
@@ -197,6 +207,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
+    @Operation(summary = "決鬥中，開始戰鬥")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:startBattle")
     public ResponseEntity<DuelFieldView> startBattle(
@@ -221,7 +232,7 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
-    //    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     void broadcastDuelFieldsTask() {
         duelFieldUseCase
                 .fetchAll()

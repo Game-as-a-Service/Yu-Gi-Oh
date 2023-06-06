@@ -2,6 +2,7 @@ package tw.wsa.gaas.java.spring.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -38,8 +39,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/swagger-config").permitAll()
-                .antMatchers("/java/api/v1.0/games:login").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui.html", "/webjars/**", "/v3/api-docs", "/v3/api-docs/swagger-config").permitAll()
+                .antMatchers(HttpMethod.POST, "/java/api/v1.0/duelFields:login").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

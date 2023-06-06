@@ -1,5 +1,5 @@
 ### Vincent Login
-POST http://localhost:8080/java/api/v1.0/auth:login
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 
 ### qrtt1 Login
-POST http://localhost:8080/java/api/v1.0/auth:login
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
 Content-Type: application/json
 
 {

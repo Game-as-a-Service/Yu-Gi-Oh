@@ -25,10 +25,6 @@ public class MonsterCards extends Cards {
         elements.add(card);
     }
 
-    public boolean validIsDuelistMonsterCard(String uuid) {
-        return elements.stream().map(Card::getUuid).collect(toList()).contains(uuid);
-    }
-
     public Card startBattle(String uuid) {
         return elements
                 .stream()

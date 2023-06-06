@@ -30,8 +30,8 @@ import org.springframework.context.annotation.Configuration;
                                 ),
                                 @ServerVariable(
                                         name = "context-path",
-                                        allowableValues = {"yigioh"},
-                                        defaultValue = "yigioh"
+                                        allowableValues = {"yugioh"},
+                                        defaultValue = "yugioh"
                                 )
                         }
                 ),

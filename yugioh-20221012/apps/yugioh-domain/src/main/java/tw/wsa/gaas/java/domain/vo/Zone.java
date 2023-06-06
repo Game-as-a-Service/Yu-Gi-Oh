@@ -34,37 +34,16 @@ public class Zone {
 
     public void start() {
         deck.shuffling();
-        duelist.drawCards(deck.draw(), deck.draw(), deck.draw(), deck.draw(), deck.draw(), deck.draw());
-    }
-
-    public Boolean validDuelist(String username) {
-        return duelist.validDuelist(username);
-    }
-
-    public Boolean validDuelistMonsterHandCard(String uuid) {
-        return duelist.validDuelistMonsterHandCard(uuid);
-    }
-
-    public Boolean validDuelistSpellHandCard(String uuid) {
-        return duelist.validDuelistSpellHandCard(uuid);
-    }
-
-    public Boolean validDuelistTrapHandCard(String uuid) {
-        return duelist.validDuelistTrapHandCard(uuid);
-    }
-
-    public Boolean validDuelistMonsterCard(String uuid) {
-        return monsterCards.validIsDuelistMonsterCard(uuid);
+        for (int i = 0; i < 6; i++) {
+            duelist.drawCards(deck.draw());
+        }
     }
 
     public void duelistDraw() {
         duelist.drawCards(deck.draw());
     }
 
-    public void duelistSummonMonster(
-            String uuid,
-            CardState cardState
-    ) {
+    public void duelistSummonMonster(String uuid, CardState cardState) {
         Card card = duelist.summonMonster(uuid);
         monsterCards.summon(card, cardState);
     }
@@ -75,18 +54,12 @@ public class Zone {
         // TODO: apply effect
     }
 
-    public void duelistCoverTrap(
-            String uuid,
-            CardState cardState
-    ) {
+    public void duelistCoverTrap(String uuid, CardState cardState) {
         final Card card = duelist.coverTrap(uuid);
         spellAndTrapCards.cover(card, cardState);
     }
 
-    public void duelistStartBattle(
-            String uuid,
-            Zone zone
-    ) {
+    public void duelistStartBattle(String uuid, Zone zone) {
         final MonsterCard monsterCard = (MonsterCard) monsterCards.startBattle(uuid);
         final MonsterCard target = zone.monsterCards.chooseTarget();
 

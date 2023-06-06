@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface DuelFieldRepository {
 
-    Optional<DuelField> insert(DuelField duelField);
-
-    Optional<DuelField> save(DuelField duelField);
-
-    Optional<DuelField> selectWaiting();
-
     Optional<DuelField> selectById(EntityId entityId);
 
     List<DuelField> selectAll();
+
+    Optional<DuelField> selectWaiting();
+
+    Optional<DuelField> save(DuelField duelField);
+
+    Optional<DuelField> insert(DuelField duelField);
 }
