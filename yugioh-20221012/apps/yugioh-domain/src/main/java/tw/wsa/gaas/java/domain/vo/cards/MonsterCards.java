@@ -32,7 +32,7 @@ public class MonsterCards extends Cards {
         elements.add(card);
     }
 
-    public Card startBattle(String uuid) {
+    public Card startBattle(Long uuid) {
         return elements
                 .stream()
                 .collect(Collectors.toMap(Card::getUuid, Function.identity()))

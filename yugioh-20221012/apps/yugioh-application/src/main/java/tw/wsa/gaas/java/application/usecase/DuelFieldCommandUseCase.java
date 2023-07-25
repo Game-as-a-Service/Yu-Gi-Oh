@@ -82,7 +82,7 @@ public class DuelFieldCommandUseCase {
                         .map(duelField -> {
                             // 改
                             final DuelFieldEvent duelFieldEvent = duelField.summonMonster(
-                                    false,
+                                    command.getSkip(),
                                     command.getCardUuid(),
                                     command.getCardState(),
                                     command.getDuelistName()
@@ -106,7 +106,7 @@ public class DuelFieldCommandUseCase {
                         .map(duelField -> {
                             // 改
                             final DuelFieldEvent duelFieldEvent = duelField.applySpell(
-                                    false,
+                                    command.getSkip(),
                                     command.getCardUuid(),
                                     command.getDuelistName()
                             );
@@ -129,7 +129,7 @@ public class DuelFieldCommandUseCase {
                         .map(duelField -> {
                             // 改
                             final DuelFieldEvent duelFieldEvent = duelField.coverTrap(
-                                    false,
+                                    command.getSkip(),
                                     command.getCardUuid(),
                                     command.getCardState(),
                                     command.getDuelistName()
@@ -153,7 +153,7 @@ public class DuelFieldCommandUseCase {
                         .map(duelField -> {
                             // 改
                             final DuelFieldEvent duelFieldEvent = duelField.startBattle(
-                                    false,
+                                    command.getSkip(),
                                     command.getCardUuid(),
                                     command.getDuelistName()
                             );

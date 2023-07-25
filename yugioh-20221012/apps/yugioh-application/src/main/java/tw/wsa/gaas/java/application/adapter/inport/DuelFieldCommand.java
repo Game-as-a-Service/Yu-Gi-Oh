@@ -13,7 +13,7 @@ public class DuelFieldCommand {
     private String uuid;
     private String duelistName;
     private Boolean skip;
-    private String cardUuid;
+    private Long cardUuid;
     private CardState cardState;
 
     public static DuelFieldCommandBuilder join() {

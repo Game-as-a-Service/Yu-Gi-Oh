@@ -18,6 +18,7 @@ val kotlinVersion: String by project
 val kotlinCoroutineVersion: String by project
 val lombokVersion: String by project
 val slf4jVersion: String by project
+val jacksonVersion: String by project
 val junitVersion: String by project
 
 dependencies {
@@ -30,6 +31,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }

@@ -1,5 +1,6 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
 import java.util.LinkedList;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -20,11 +22,11 @@ public abstract class Cards {
 
     private static final MonsterCard BlueEyesShiningDragon =
             new MonsterCard(
-                    "",
+                    0L,
                     CardState.BACK,
-                    "青眼の白龍",
+                    "Blue-Eyes White Dragon",
                     CardType.MONSTER,
-                    "高い攻撃力を誇る伝説のドラゴン。どんな相手でも粉砕する、その破壊力は計り知れない。",
+                    "This legendary dragon is a powerful engine of destruction. Virtually invincible, very few have faced this awesome creature and lived to tell the tale.",
                     Attribute.LIGHT,
                     MonsterType.DRAGON,
                     8,
@@ -37,9 +39,4 @@ public abstract class Cards {
     protected Integer limit;
     // 元素
     protected LinkedList<Card> elements;
-
-    public Cards(Integer limit, LinkedList<Card> elements) {
-        this.limit = limit;
-        this.elements = elements;
-    }
 }

@@ -1,14 +1,20 @@
 package tw.wsa.gaas.java.domain.vo.card;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.CardType;
 
 @AllArgsConstructor
+@Getter
+@EqualsAndHashCode
+@ToString
 public abstract class Card {
 
     // UUID
-    protected String uuid;
+    protected Long uuid;
     // 表示狀態
     protected CardState cardState;
     // 名稱
@@ -22,7 +28,5 @@ public abstract class Card {
         this.cardState = cardState;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
+    public abstract Card copy();
 }

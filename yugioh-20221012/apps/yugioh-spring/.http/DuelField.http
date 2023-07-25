@@ -1,4 +1,4 @@
-###
+### Vincent Login
 POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
     client.global.set("tokenV", response.body.toString());
 %}
 
-###
+### qrtt1 Login
 POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
 Content-Type: application/json
 
@@ -24,20 +24,108 @@ Content-Type: application/json
     client.global.set("tokenQ", response.body.toString());
 %}
 
-###
+### Vincent Join
 POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
-### establish V sse
-### establish Q sse
+> {%
+    client.global.set("uuid", response.body.toString());
+%}
 
-###
+### Vincent Create SSE
+GET http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}/sse
+Content-Type: text/event-stream
+Authorization: Bearer {{tokenV}}
+
+### qrtt1 Create SSE
+GET http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}/sse
+Content-Type: text/event-stream
+Authorization: Bearer {{tokenQ}}
+
+### qrtt1 Join
 POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
 Content-Type: application/json
 Authorization: Bearer {{tokenQ}}
 
-###
-POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/:join
+### Vincent Draw Card
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:drawCard
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
+
+### Vincent Summon Monster
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:summonMonster
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+{
+    "uuid": 1690296497622
+}
+
+### Vincent Apply Spell
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:applySpell?skip=true
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+{
+    "uuid": ""
+}
+
+### Vincent Cover Trap
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:coverTrap?skip=true
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+{
+    "uuid": ""
+}
+
+### Vincent Start Battle
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:startBattle?skip=true
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+{
+    "uuid": ""
+}
+
+### qrtt1 Draw Card
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:drawCard
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}
+
+### qrtt1 Summon Monster
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:summonMonster
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}
+
+{
+    "uuid": "1690296497642"
+}
+
+### qrtt1 Apply Spell
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:applySpell?skip=true
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}
+
+{
+    "uuid": ""
+}
+
+### qrtt1 Cover Trap
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:coverTrap?skip=true
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}
+
+{
+    "uuid": ""
+}
+
+### qrtt1 Start Battle
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/{{uuid}}:startBattle
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}
+
+{
+    "uuid": "1690296497642"
+}

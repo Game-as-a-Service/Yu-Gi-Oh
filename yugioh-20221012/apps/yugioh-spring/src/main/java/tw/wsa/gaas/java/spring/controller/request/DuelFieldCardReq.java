@@ -11,7 +11,7 @@ import tw.wsa.gaas.java.domain.enu.CardState;
 public class DuelFieldCardReq {
 
     // 卡牌唯一識別碼
-    private String uuid;
+    private Long uuid;
     // 卡牌表示方式
     private CardState cardState = CardState.FRONT;
 }

@@ -68,7 +68,7 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent summonMonster(
             Boolean skip,
-            String cardUuid,
+            Long cardUuid,
             CardState cardState,
             String duelistName) {
         if (duelistName.equals(left.getDuelist().getName())) {
@@ -84,7 +84,7 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent applySpell(
             Boolean skip,
-            String cardUuid,
+            Long cardUuid,
             String duelistName) {
         if (duelistName.equals(left.getDuelist().getName())) {
             if (!skip) left.duelistApplySpell(cardUuid);
@@ -99,7 +99,7 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent coverTrap(
             Boolean skip,
-            String cardUuid,
+            Long cardUuid,
             CardState cardState,
             String duelistName) {
         if (duelistName.equals(left.getDuelist().getName())) {
@@ -115,7 +115,7 @@ public class DuelField extends DomainEntity {
 
     public DuelFieldEvent startBattle(
             Boolean skip,
-            String cardUuid,
+            Long cardUuid,
             String duelistName) {
         if (duelistName.equals(left.getDuelist().getName())) {
             if (!firstRound && !skip) {

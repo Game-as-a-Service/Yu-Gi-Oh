@@ -31,8 +31,7 @@ public class EventBusImpl implements EventBus {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(10));
 
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public <T> void broadcast(List<T> event) {
@@ -56,7 +55,7 @@ public class EventBusImpl implements EventBus {
                                                             .event()
                                                             .id(OffsetDateTime.now().toString())
                                                             .name(String.format("DuelField:%s", duelField.getEntityId().getUuid()))
-                                                            .data(objectMapper.writeValueAsString(duelFieldView))
+                                                            .data(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(duelFieldView))
                                             );
                                         } catch (IOException ex) {
                                             sseEmitter.completeWithError(ex);

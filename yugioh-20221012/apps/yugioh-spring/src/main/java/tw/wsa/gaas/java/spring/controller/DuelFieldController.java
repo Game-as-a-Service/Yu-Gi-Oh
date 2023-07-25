@@ -57,7 +57,7 @@ public class DuelFieldController {
     @Operation(summary = "1.2 加入決鬥，自動配對")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields:join")
-    public ResponseEntity<Map<String, Object>> join(Principal principal) {
+    public ResponseEntity<String> join(Principal principal) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
         duelFieldCommandUseCase.execute(
                 DuelFieldCommand
@@ -68,7 +68,7 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.returnViewResp();
+        return duelFieldPresenter.returnUuidResp();
     }
 
     @Operation(summary = "1.3 建立決鬥場 Server Sent Event")

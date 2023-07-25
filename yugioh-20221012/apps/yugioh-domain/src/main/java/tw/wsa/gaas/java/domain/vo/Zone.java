@@ -3,7 +3,6 @@ package tw.wsa.gaas.java.domain.vo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
@@ -15,7 +14,6 @@ import tw.wsa.gaas.java.domain.vo.cards.SpellAndTrapCards;
 /**
  * 遊戲區
  */
-@Slf4j
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -45,30 +43,29 @@ public class Zone {
         for (int i = 0; i < 6; i++) {
             duelist.drawCards(deck.draw());
         }
-        log.info("");
     }
 
     public void duelistDraw() {
         duelist.drawCards(deck.draw());
     }
 
-    public void duelistSummonMonster(String uuid, CardState cardState) {
+    public void duelistSummonMonster(Long uuid, CardState cardState) {
         Card card = duelist.summonMonster(uuid);
         monsterCards.summon(card, cardState);
     }
 
-    public void duelistApplySpell(String uuid) {
+    public void duelistApplySpell(Long uuid) {
         Card card = duelist.applySpell(uuid);
 
         // TODO: apply effect
     }
 
-    public void duelistCoverTrap(String uuid, CardState cardState) {
+    public void duelistCoverTrap(Long uuid, CardState cardState) {
         final Card card = duelist.coverTrap(uuid);
         spellAndTrapCards.cover(card, cardState);
     }
 
-    public void duelistStartBattle(String uuid, Zone zone) {
+    public void duelistStartBattle(Long uuid, Zone zone) {
         final MonsterCard monsterCard = (MonsterCard) monsterCards.startBattle(uuid);
         final MonsterCard target = zone.monsterCards.chooseTarget();
 
@@ -76,18 +73,18 @@ public class Zone {
         if (scoreDelta > 0) {
             if (null != target) {
                 zone.monsterCards.moveToGraveYard(target);
-                zone.graveYardCards.put(target);
+                zone.graveYardCards.moveToGraveYard(target);
             }
             zone.duelist.startBattle(scoreDelta);
         } else if (scoreDelta < 0) {
             this.monsterCards.moveToGraveYard(monsterCard);
-            this.graveYardCards.put(monsterCard);
+            this.graveYardCards.moveToGraveYard(monsterCard);
             duelist.startBattle(scoreDelta);
         } else {
             zone.monsterCards.moveToGraveYard(target);
-            zone.graveYardCards.put(target);
+            zone.graveYardCards.moveToGraveYard(target);
             this.monsterCards.moveToGraveYard(monsterCard);
-            this.graveYardCards.put(monsterCard);
+            this.graveYardCards.moveToGraveYard(monsterCard);
         }
     }
 }

@@ -19,7 +19,7 @@ public class GraveYardCards extends Cards {
         super(99, new LinkedList<>());
     }
 
-    public void put(MonsterCard target) {
+    public void moveToGraveYard(MonsterCard target) {
         elements.add(target);
     }
 }

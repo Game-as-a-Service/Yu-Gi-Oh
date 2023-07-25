@@ -33,15 +33,15 @@ public class Duelist {
         Arrays.stream(draw).forEach(handCards::draw);
     }
 
-    public Card summonMonster(String uuid) {
+    public Card summonMonster(Long uuid) {
         return handCards.submit(uuid);
     }
 
-    public Card applySpell(String uuid) {
+    public Card applySpell(Long uuid) {
         return handCards.submit(uuid);
     }
 
-    public Card coverTrap(String uuid) {
+    public Card coverTrap(Long uuid) {
         return handCards.submit(uuid);
     }
 

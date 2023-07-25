@@ -25,7 +25,7 @@ public class HandCards extends Cards {
         elements.offer(card);
     }
 
-    public Card submit(String uuid) {
+    public Card submit(Long uuid) {
         final Card card = elements
                 .stream()
                 .collect(Collectors.toMap(Card::getUuid, Function.identity()))
