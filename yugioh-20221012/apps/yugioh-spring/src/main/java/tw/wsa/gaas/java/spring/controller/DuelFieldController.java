@@ -1,6 +1,5 @@
 package tw.wsa.gaas.java.spring.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -8,15 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import tw.wsa.gaas.java.application.adapter.inport.command.DuelFieldCommand;
-import tw.wsa.gaas.java.application.adapter.inport.query.DuelFieldQuery;
-import tw.wsa.gaas.java.application.usecase.DuelFieldUseCase;
+import tw.wsa.gaas.java.application.adapter.inport.DuelFieldCommand;
+import tw.wsa.gaas.java.application.usecase.DuelFieldCommandUseCase;
 import tw.wsa.gaas.java.spring.config.security.JwtTokenService;
 import tw.wsa.gaas.java.spring.config.security.UsernamePasswordPairDTO;
 import tw.wsa.gaas.java.spring.controller.presenter.DuelFieldPresenter;
@@ -26,12 +23,9 @@ import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Tag(name = "🂼 DuelField 決鬥場 🂼")
@@ -42,9 +36,8 @@ public class DuelFieldController {
 
     private final AuthenticationManager authenticationManager;
     private final ConcurrentHashMap<String, List<SseEmitter>> duelFieldUuidAndSseEmitters = new ConcurrentHashMap<>();
-    private final DuelFieldUseCase duelFieldUseCase;
+    private final DuelFieldCommandUseCase duelFieldCommandUseCase;
     private final JwtTokenService jwtTokenService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Operation(summary = "1.1 決鬥者登入")
     @PostMapping("/duelFields:login")
@@ -63,20 +56,24 @@ public class DuelFieldController {
                 .body(jwt);
     }
 
-    @Operation(summary = "2.1 查詢決鬥場")
+    @Operation(summary = "1.2 加入決鬥，自動配對")
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/duelFields/{uuid}")
-    public ResponseEntity<DuelFieldView> queryDuelField(@PathVariable String uuid) {
+    @PostMapping("/duelFields:join")
+    public ResponseEntity<DuelFieldView> join(Principal principal) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
-                DuelFieldQuery.builder().uuid(uuid).build(),
+        duelFieldCommandUseCase.execute(
+                DuelFieldCommand
+                        .join()
+                        .uuid("JOIN")
+                        .duelistName(principal.getName())
+                        .build(),
                 duelFieldPresenter
         );
 
         return duelFieldPresenter.retrieveResponse();
     }
 
-    @Operation(summary = "2.2 查詢決鬥場SSE")
+    @Operation(summary = "1.3 建立決鬥場 Server Sent Event")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/duelFields/{uuid}:sse")
     public SseEmitter queryDuelFieldSse(@PathVariable String uuid) throws IOException {
@@ -98,22 +95,6 @@ public class DuelFieldController {
         return sseEmitter;
     }
 
-    @Operation(summary = "1.2 加入決鬥，自動配對")
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/duelFields:join")
-    public ResponseEntity<DuelFieldView> join(Principal principal) {
-        DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
-                DuelFieldCommand
-                        .join()
-                        .duelistName(principal.getName())
-                        .build(),
-                duelFieldPresenter
-        );
-
-        return duelFieldPresenter.retrieveResponse();
-    }
-
     @Operation(summary = "1.3 決鬥中，抽卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:drawCard")
@@ -122,7 +103,7 @@ public class DuelFieldController {
             Principal principal
     ) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
+        duelFieldCommandUseCase.execute(
                 DuelFieldCommand
                         .drawCard()
                         .uuid(uuid)
@@ -144,7 +125,7 @@ public class DuelFieldController {
             Principal principal
     ) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
+        duelFieldCommandUseCase.execute(
                 DuelFieldCommand
                         .summonMonster()
                         .uuid(uuid)
@@ -169,7 +150,7 @@ public class DuelFieldController {
             Principal principal
     ) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
+        duelFieldCommandUseCase.execute(
                 DuelFieldCommand
                         .applySpell()
                         .uuid(uuid)
@@ -194,7 +175,7 @@ public class DuelFieldController {
             Principal principal
     ) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
+        duelFieldCommandUseCase.execute(
                 DuelFieldCommand
                         .coverTrap()
                         .uuid(uuid)
@@ -219,7 +200,7 @@ public class DuelFieldController {
             Principal principal
     ) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
-        duelFieldUseCase.execute(
+        duelFieldCommandUseCase.execute(
                 DuelFieldCommand
                         .startBattle()
                         .uuid(uuid)
@@ -234,30 +215,32 @@ public class DuelFieldController {
         return duelFieldPresenter.retrieveResponse();
     }
 
-    @Scheduled(cron = "*/5 * * * * *")
-    void broadcastDuelFieldsTask() {
-        duelFieldUseCase
-                .fetchAll()
-                .stream()
-                .collect(Collectors.groupingBy(duelField -> duelField.getEntityId().getUuid()))
-                .forEach((uuid, duelFields) ->
-                        Optional
-                                .ofNullable(duelFieldUuidAndSseEmitters.get(uuid))
-                                .ifPresent(emitters -> emitters
-                                        .forEach(emitter -> {
-                                            try {
-                                                emitter.send(
-                                                        SseEmitter
-                                                                .event()
-                                                                .id(OffsetDateTime.now().toString())
-                                                                .name(String.format("Game:%s", uuid))
-                                                                .data(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new DuelFieldView(duelFields.get(0))))
-                                                );
-                                            } catch (IOException ex) {
-                                                log.error(ex.getMessage(), ex);
-                                            }
-                                        })
-                                )
-                );
-    }
+
+
+//    @Scheduled(cron = "*/5 * * * * *")
+//    void broadcastDuelFieldsTask() {
+//        duelFieldCommandUseCase
+//                .fetchAll()
+//                .stream()
+//                .collect(Collectors.groupingBy(duelField -> duelField.getEntityId().getUuid()))
+//                .forEach((uuid, duelFields) ->
+//                        Optional
+//                                .ofNullable(duelFieldUuidAndSseEmitters.get(uuid))
+//                                .ifPresent(emitters -> emitters
+//                                        .forEach(emitter -> {
+//                                            try {
+//                                                emitter.send(
+//                                                        SseEmitter
+//                                                                .event()
+//                                                                .id(OffsetDateTime.now().toString())
+//                                                                .name(String.format("Game:%s", uuid))
+//                                                                .data(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new DuelFieldView(duelFields.get(0))))
+//                                                );
+//                                            } catch (IOException ex) {
+//                                                log.error(ex.getMessage(), ex);
+//                                            }
+//                                        })
+//                                )
+//                );
+//    }
 }

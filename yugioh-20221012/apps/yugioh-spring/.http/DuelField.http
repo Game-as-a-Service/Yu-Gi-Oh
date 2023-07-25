@@ -1,0 +1,35 @@
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
+Content-Type: application/json
+
+{
+  "username": "vincent",
+  "password": "123456"
+}
+
+> {%
+    client.global.set("tokenV", response.body.toString());
+%}
+
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:login
+Content-Type: application/json
+
+{
+    "username": "qxqx",
+    "password": "123456"
+}
+
+> {%
+    client.global.set("tokenQ", response.body.toString());
+%}
+
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}
+
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
+Content-Type: application/json
+Authorization: Bearer {{tokenQ}}

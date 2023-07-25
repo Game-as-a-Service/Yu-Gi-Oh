@@ -1,4 +1,4 @@
-package tw.wsa.gaas.java.spring.data;
+package tw.wsa.gaas.java.spring.data.repository;
 
 import org.springframework.stereotype.Repository;
 import tw.wsa.gaas.java.domain.entity.DuelField;

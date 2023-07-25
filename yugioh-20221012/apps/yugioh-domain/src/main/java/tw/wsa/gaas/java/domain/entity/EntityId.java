@@ -1,16 +1,20 @@
 package tw.wsa.gaas.java.domain.entity;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 @Builder(toBuilder = true)
-@Data
+@Getter
+@EqualsAndHashCode
+@ToString
 public class EntityId {
 
-    String uuid;
-    String createdBy;
-    String lastModifiedBy;
-    Long createdDate;
-    Long lastModifiedDate;
-    String memo;
+    private String uuid;
+    private String createdBy;
+    private String lastModifiedBy;
+    private Long createdDate;
+    private Long lastModifiedDate;
+    private String memo;
 }

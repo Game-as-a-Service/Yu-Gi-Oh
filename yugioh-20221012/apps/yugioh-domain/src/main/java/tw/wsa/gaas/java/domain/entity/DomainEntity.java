@@ -1,10 +1,9 @@
 package tw.wsa.gaas.java.domain.entity;
 
+import lombok.Getter;
+
+@Getter
 public class DomainEntity {
 
-    EntityId entityId;
-
-    public EntityId getEntityId() {
-        return entityId;
-    }
+    protected EntityId entityId;
 }

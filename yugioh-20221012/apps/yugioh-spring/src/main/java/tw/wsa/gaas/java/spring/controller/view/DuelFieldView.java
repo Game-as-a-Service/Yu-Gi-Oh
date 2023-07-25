@@ -1,13 +1,15 @@
 package tw.wsa.gaas.java.spring.controller.view;
 
-import tw.wsa.gaas.java.domain.entity.DuelField;
-import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DuelFieldView {
 
-    public DuelFieldView(DuelField duelField) {
-    }
-
-    public DuelFieldView(DuelFieldEvent duelFieldEvent) {
-    }
+    private String uuid;
 }

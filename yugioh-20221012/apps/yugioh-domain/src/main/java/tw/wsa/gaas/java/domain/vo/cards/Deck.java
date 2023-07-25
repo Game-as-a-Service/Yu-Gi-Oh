@@ -18,7 +18,7 @@ public class Deck extends Cards {
 
     public void shuffling() {
         for (int i = 0; i < 10; i++) {
-            elements.offer(library.get(random.nextInt(library.size())));
+            elements.offer(libraries.get(random.nextInt(libraries.size())));
         }
     }
 

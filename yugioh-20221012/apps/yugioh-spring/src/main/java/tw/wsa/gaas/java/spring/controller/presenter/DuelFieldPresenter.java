@@ -15,19 +15,15 @@ public class DuelFieldPresenter implements Presenter {
 
     @Override
     public <T> Optional<Void> present(List<T> events) {
-        events.stream()
-                .findFirst()
-                .map(v -> {
-                    if (v instanceof DuelField) {
-                        DuelField entity = (DuelField) v;
-                        viewModelOpt = Optional.of(new DuelFieldView(entity));
-                    } else {
-                        DuelFieldEvent event = (DuelFieldEvent) v;
-                        viewModelOpt = Optional.of(new DuelFieldView(event));
-                    }
-
-                    return Optional.empty();
-                });
+        events.forEach(v -> {
+            if (v instanceof DuelField) {
+                DuelField entity = (DuelField) v;
+                viewModelOpt = Optional.of(DuelFieldView.builder().uuid(entity.getEntityId().getUuid()).build());
+            } else {
+                DuelFieldEvent event = (DuelFieldEvent) v;
+                viewModelOpt = Optional.of(DuelFieldView.builder().uuid(event.getEntityId().getUuid()).build());
+            }
+        });
 
         return Optional.empty();
     }

@@ -1,16 +1,12 @@
-package tw.wsa.gaas.java.application.adapter.inport.command;
+package tw.wsa.gaas.java.application.adapter.inport;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.CommandType;
 
 @Builder(toBuilder = true)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class DuelFieldCommand {
 
     private CommandType commandType;

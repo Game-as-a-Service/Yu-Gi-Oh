@@ -1,8 +1,8 @@
 package tw.wsa.gaas.java.application.usecase;
 
 import lombok.RequiredArgsConstructor;
-import tw.wsa.gaas.java.application.adapter.inport.command.DuelFieldCommand;
-import tw.wsa.gaas.java.application.adapter.inport.query.DuelFieldQuery;
+import tw.wsa.gaas.java.application.adapter.inport.DuelFieldCommand;
+import tw.wsa.gaas.java.application.adapter.outport.EventBus;
 import tw.wsa.gaas.java.application.adapter.outport.Presenter;
 import tw.wsa.gaas.java.domain.entity.DuelField;
 import tw.wsa.gaas.java.domain.entity.EntityId;
@@ -17,19 +17,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class DuelFieldUseCase {
+public class DuelFieldCommandUseCase {
+
+    private final EventBus eventBus;
 
     private final DuelFieldRepository duelFieldRepository;
 
-    public void execute(DuelFieldQuery query, Presenter presenter) {
-        final Optional<DuelField> duelFieldOpt = duelFieldRepository.selectById(EntityId.builder().uuid(query.getUuid()).build());
-
-        duelFieldOpt.map(duelField -> presenter.present(List.of(duelField)));
-    }
-
-    public List<DuelField> fetchAll() {
-        return duelFieldRepository.selectAll();
-    }
+//    public void execute(DuelFieldQuery query, Presenter presenter) {
+//        final Optional<DuelField> duelFieldOpt = duelFieldRepository.selectById(EntityId.builder().uuid(query.getUuid()).build());
+//
+//        duelFieldOpt.map(duelField -> presenter.present(List.of(duelField)));
+//    }
+//
+//    public List<DuelField> fetchAll() {
+//        return duelFieldRepository.selectAll();
+//    }
 
     public void execute(DuelFieldCommand command, Presenter presenter) {
         // 查
@@ -45,6 +47,7 @@ public class DuelFieldUseCase {
 
                             duelFieldRepository.save(duelField);
 
+                            eventBus.broadcast(List.of(duelFieldEvent));
                             return presenter.present(List.of(duelFieldEvent));
                         })
                         // 不存在等待中的對戰場地，創建
@@ -68,7 +71,7 @@ public class DuelFieldUseCase {
                         // 存
                         .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
                         // 推
-                        .map(event -> presenter.present(List.of(event)));
+                        .flatMap(event -> presenter.present(List.of(event)));
                 break;
             case SUMMON_MONSTER:
                 duelFieldOpt
@@ -86,7 +89,7 @@ public class DuelFieldUseCase {
                         // 存
                         .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
                         // 推
-                        .map(event -> presenter.present(List.of(event)));
+                        .flatMap(event -> presenter.present(List.of(event)));
                 break;
             case APPLY_SPELL:
                 duelFieldOpt
@@ -103,7 +106,7 @@ public class DuelFieldUseCase {
                         // 存
                         .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
                         // 推
-                        .map(event -> presenter.present(List.of(event)));
+                        .flatMap(event -> presenter.present(List.of(event)));
                 break;
             case COVER_TRAP:
                 duelFieldOpt
@@ -121,7 +124,7 @@ public class DuelFieldUseCase {
                         // 存
                         .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
                         // 推
-                        .map(event -> presenter.present(List.of(event)));
+                        .flatMap(event -> presenter.present(List.of(event)));
                 break;
             case START_BATTLE:
                 duelFieldOpt
@@ -138,7 +141,7 @@ public class DuelFieldUseCase {
                         // 存
                         .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
                         // 推
-                        .map(event -> presenter.present(List.of(event)));
+                        .flatMap(event -> presenter.present(List.of(event)));
                 break;
         }
     }

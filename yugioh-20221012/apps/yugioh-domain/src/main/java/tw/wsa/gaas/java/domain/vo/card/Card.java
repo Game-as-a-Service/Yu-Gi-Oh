@@ -1,8 +1,10 @@
 package tw.wsa.gaas.java.domain.vo.card;
 
+import lombok.AllArgsConstructor;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.CardType;
 
+@AllArgsConstructor
 public abstract class Card {
 
     // UUID
@@ -22,9 +24,5 @@ public abstract class Card {
 
     public String getUuid() {
         return uuid;
-    }
-
-    public CardType getType() {
-        return cardType;
     }
 }
