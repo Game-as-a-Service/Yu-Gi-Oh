@@ -23,9 +23,7 @@ import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Tag(name = "🂼 DuelField 決鬥場 🂼")
@@ -35,9 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DuelFieldController {
 
     private final AuthenticationManager authenticationManager;
-    private final ConcurrentHashMap<String, List<SseEmitter>> duelFieldUuidAndSseEmitters = new ConcurrentHashMap<>();
-    private final DuelFieldCommandUseCase duelFieldCommandUseCase;
     private final JwtTokenService jwtTokenService;
+    private final DuelFieldCommandUseCase duelFieldCommandUseCase;
+    private final SseController sseController;
 
     @Operation(summary = "1.1 決鬥者登入")
     @PostMapping("/duelFields:login")
@@ -70,7 +68,7 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnViewResp();
     }
 
     @Operation(summary = "1.3 建立決鬥場 Server Sent Event")
@@ -86,11 +84,7 @@ public class DuelFieldController {
                         .reconnectTime(1000)
         );
 
-        if (duelFieldUuidAndSseEmitters.containsKey(uuid)) {
-            duelFieldUuidAndSseEmitters.get(uuid).add(sseEmitter);
-        } else {
-            duelFieldUuidAndSseEmitters.put(uuid, List.of(sseEmitter));
-        }
+        sseController.put(uuid, sseEmitter);
 
         return sseEmitter;
     }
@@ -98,7 +92,7 @@ public class DuelFieldController {
     @Operation(summary = "1.3 決鬥中，抽卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:drawCard")
-    public ResponseEntity<DuelFieldView> drawCard(
+    public ResponseEntity<Object> drawCard(
             @PathVariable String uuid,
             Principal principal
     ) {
@@ -112,13 +106,13 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnAccepted();
     }
 
     @Operation(summary = "1.4 決鬥中，召喚怪獸")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:summonMonster")
-    public ResponseEntity<DuelFieldView> summonMonster(
+    public ResponseEntity<Object> summonMonster(
             @PathVariable String uuid,
             @RequestParam(required = false, defaultValue = "false") Boolean skip,
             @RequestBody DuelFieldCardReq duelFieldCardReq,
@@ -137,13 +131,13 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnAccepted();
     }
 
     @Operation(summary = "1.5 決鬥中，使用魔法卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:applySpell")
-    public ResponseEntity<DuelFieldView> applySpell(
+    public ResponseEntity<Object> applySpell(
             @PathVariable String uuid,
             @RequestParam(required = false, defaultValue = "false") Boolean skip,
             @RequestBody DuelFieldCardReq duelFieldCardReq,
@@ -162,13 +156,13 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnAccepted();
     }
 
     @Operation(summary = "1.6 決鬥中，覆蓋陷阱卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:coverTrap")
-    public ResponseEntity<DuelFieldView> coverTrap(
+    public ResponseEntity<Object> coverTrap(
             @PathVariable String uuid,
             @RequestParam(required = false, defaultValue = "false") Boolean skip,
             @RequestBody DuelFieldCardReq duelFieldCardReq,
@@ -187,13 +181,13 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnAccepted();
     }
 
     @Operation(summary = "1.7 決鬥中，開始戰鬥")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:startBattle")
-    public ResponseEntity<DuelFieldView> startBattle(
+    public ResponseEntity<Object> startBattle(
             @PathVariable String uuid,
             @RequestParam(required = false, defaultValue = "false") Boolean skip,
             @RequestBody DuelFieldCardReq duelFieldCardReq,
@@ -212,7 +206,7 @@ public class DuelFieldController {
                 duelFieldPresenter
         );
 
-        return duelFieldPresenter.retrieveResponse();
+        return duelFieldPresenter.returnAccepted();
     }
 
 

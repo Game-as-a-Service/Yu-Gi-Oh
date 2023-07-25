@@ -18,19 +18,25 @@ public class DuelFieldPresenter implements Presenter {
         events.forEach(v -> {
             if (v instanceof DuelField) {
                 DuelField entity = (DuelField) v;
-                viewModelOpt = Optional.of(DuelFieldView.builder().uuid(entity.getEntityId().getUuid()).build());
+                viewModelOpt = Optional.of(new DuelFieldView(entity.getEntityId().getUuid()));
             } else {
                 DuelFieldEvent event = (DuelFieldEvent) v;
-                viewModelOpt = Optional.of(DuelFieldView.builder().uuid(event.getEntityId().getUuid()).build());
+                viewModelOpt = Optional.of(new DuelFieldView(event.getEntityId().getUuid()));
             }
         });
 
         return Optional.empty();
     }
 
-    public ResponseEntity<DuelFieldView> retrieveResponse() {
+    public ResponseEntity<DuelFieldView> returnViewResp() {
         return viewModelOpt
                 .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    public ResponseEntity<Object> returnAccepted() {
+        return viewModelOpt
+                .map(v -> ResponseEntity.accepted().build())
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
