@@ -29,7 +29,15 @@ POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
 Content-Type: application/json
 Authorization: Bearer {{tokenV}}
 
+### establish V sse
+### establish Q sse
+
 ###
 POST http://localhost:8080/yugioh/java/api/v1.0/duelFields:join
 Content-Type: application/json
 Authorization: Bearer {{tokenQ}}
+
+###
+POST http://localhost:8080/yugioh/java/api/v1.0/duelFields/:join
+Content-Type: application/json
+Authorization: Bearer {{tokenV}}

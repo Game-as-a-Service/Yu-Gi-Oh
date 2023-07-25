@@ -1,41 +1,41 @@
 package tw.wsa.gaas.java.spring.controller.presenter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import tw.wsa.gaas.java.application.adapter.outport.Presenter;
-import tw.wsa.gaas.java.domain.entity.DuelField;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
-import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 public class DuelFieldPresenter implements Presenter {
 
-    private Optional<DuelFieldView> viewModelOpt;
+    private Optional<Map<String, Object>> responseMapOpt;
 
     @Override
     public <T> Optional<Void> present(List<T> events) {
         events.forEach(v -> {
-            if (v instanceof DuelField) {
-                DuelField entity = (DuelField) v;
-                viewModelOpt = Optional.of(new DuelFieldView(entity.getEntityId().getUuid()));
-            } else {
+            if (v instanceof DuelFieldEvent) {
                 DuelFieldEvent event = (DuelFieldEvent) v;
-                viewModelOpt = Optional.of(new DuelFieldView(event.getEntityId().getUuid()));
+                responseMapOpt = Optional.of(Map.of("uuid", event.getEntityId().getUuid()));
+            } else {
+                log.warn("Unknown event: {}", v);
             }
         });
 
         return Optional.empty();
     }
 
-    public ResponseEntity<DuelFieldView> returnViewResp() {
-        return viewModelOpt
+    public ResponseEntity<Map<String, Object>> returnViewResp() {
+        return responseMapOpt
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<Object> returnAccepted() {
-        return viewModelOpt
+        return responseMapOpt
                 .map(v -> ResponseEntity.accepted().build())
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

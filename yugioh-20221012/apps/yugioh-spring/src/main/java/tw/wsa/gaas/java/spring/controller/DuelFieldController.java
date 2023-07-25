@@ -18,11 +18,11 @@ import tw.wsa.gaas.java.spring.config.security.JwtTokenService;
 import tw.wsa.gaas.java.spring.config.security.UsernamePasswordPairDTO;
 import tw.wsa.gaas.java.spring.controller.presenter.DuelFieldPresenter;
 import tw.wsa.gaas.java.spring.controller.request.DuelFieldCardReq;
-import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -57,7 +57,7 @@ public class DuelFieldController {
     @Operation(summary = "1.2 加入決鬥，自動配對")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields:join")
-    public ResponseEntity<DuelFieldView> join(Principal principal) {
+    public ResponseEntity<Map<String, Object>> join(Principal principal) {
         DuelFieldPresenter duelFieldPresenter = new DuelFieldPresenter();
         duelFieldCommandUseCase.execute(
                 DuelFieldCommand
@@ -73,9 +73,12 @@ public class DuelFieldController {
 
     @Operation(summary = "1.3 建立決鬥場 Server Sent Event")
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/duelFields/{uuid}:sse")
+    @GetMapping("/duelFields/{uuid}/sse")
     public SseEmitter queryDuelFieldSse(@PathVariable String uuid) throws IOException {
         final SseEmitter sseEmitter = new SseEmitter(0L);
+        sseEmitter.onCompletion(() -> log.info("SseEmitter onCompletion"));
+        sseEmitter.onTimeout(() -> log.info("SseEmitter onTimeout"));
+        sseEmitter.onError(tw -> log.error("SseEmitter onError", tw));
         sseEmitter.send(
                 SseEmitter
                         .event()
@@ -89,7 +92,7 @@ public class DuelFieldController {
         return sseEmitter;
     }
 
-    @Operation(summary = "1.3 決鬥中，抽卡")
+    @Operation(summary = "1.4 決鬥中，抽卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:drawCard")
     public ResponseEntity<Object> drawCard(
@@ -109,7 +112,7 @@ public class DuelFieldController {
         return duelFieldPresenter.returnAccepted();
     }
 
-    @Operation(summary = "1.4 決鬥中，召喚怪獸")
+    @Operation(summary = "1.5 決鬥中，召喚怪獸")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:summonMonster")
     public ResponseEntity<Object> summonMonster(
@@ -134,7 +137,7 @@ public class DuelFieldController {
         return duelFieldPresenter.returnAccepted();
     }
 
-    @Operation(summary = "1.5 決鬥中，使用魔法卡")
+    @Operation(summary = "1.6 決鬥中，使用魔法卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:applySpell")
     public ResponseEntity<Object> applySpell(
@@ -159,7 +162,7 @@ public class DuelFieldController {
         return duelFieldPresenter.returnAccepted();
     }
 
-    @Operation(summary = "1.6 決鬥中，覆蓋陷阱卡")
+    @Operation(summary = "1.7 決鬥中，覆蓋陷阱卡")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:coverTrap")
     public ResponseEntity<Object> coverTrap(
@@ -184,7 +187,7 @@ public class DuelFieldController {
         return duelFieldPresenter.returnAccepted();
     }
 
-    @Operation(summary = "1.7 決鬥中，開始戰鬥")
+    @Operation(summary = "1.8 決鬥中，開始戰鬥")
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/duelFields/{uuid}:startBattle")
     public ResponseEntity<Object> startBattle(
@@ -208,33 +211,4 @@ public class DuelFieldController {
 
         return duelFieldPresenter.returnAccepted();
     }
-
-
-
-//    @Scheduled(cron = "*/5 * * * * *")
-//    void broadcastDuelFieldsTask() {
-//        duelFieldCommandUseCase
-//                .fetchAll()
-//                .stream()
-//                .collect(Collectors.groupingBy(duelField -> duelField.getEntityId().getUuid()))
-//                .forEach((uuid, duelFields) ->
-//                        Optional
-//                                .ofNullable(duelFieldUuidAndSseEmitters.get(uuid))
-//                                .ifPresent(emitters -> emitters
-//                                        .forEach(emitter -> {
-//                                            try {
-//                                                emitter.send(
-//                                                        SseEmitter
-//                                                                .event()
-//                                                                .id(OffsetDateTime.now().toString())
-//                                                                .name(String.format("Game:%s", uuid))
-//                                                                .data(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new DuelFieldView(duelFields.get(0))))
-//                                                );
-//                                            } catch (IOException ex) {
-//                                                log.error(ex.getMessage(), ex);
-//                                            }
-//                                        })
-//                                )
-//                );
-//    }
 }

@@ -1,6 +1,7 @@
 package tw.wsa.gaas.java.domain.entity;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.Phase;
@@ -10,6 +11,7 @@ import tw.wsa.gaas.java.domain.vo.Zone;
 import java.time.Instant;
 import java.util.UUID;
 
+@Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString
 public class DuelField extends DomainEntity {

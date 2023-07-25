@@ -1,5 +1,8 @@
 package tw.wsa.gaas.java.domain.vo;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.cards.HandCards;
 
@@ -8,6 +11,9 @@ import java.util.Arrays;
 /**
  * 決鬥者
  */
+@Getter
+@EqualsAndHashCode
+@ToString
 public class Duelist {
 
     // 名稱
@@ -41,9 +47,5 @@ public class Duelist {
 
     public void startBattle(Integer scoreDelta) {
         this.lp = this.lp - scoreDelta;
-    }
-
-    public String getName() {
-        return name;
     }
 }

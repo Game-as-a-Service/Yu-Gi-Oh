@@ -1,10 +1,14 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,10 +17,13 @@ import static java.util.stream.Collectors.toList;
 /**
  * 怪獸卡組
  */
+@Getter
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class MonsterCards extends Cards {
 
     public MonsterCards() {
-        limit = 5;
+        super(5, new LinkedList<>());
     }
 
     public void summon(Card card, CardState cardState) {

@@ -1,14 +1,17 @@
 package tw.wsa.gaas.java.spring.data.eventbus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import tw.wsa.gaas.java.application.adapter.outport.EventBus;
 import tw.wsa.gaas.java.domain.entity.DuelField;
-import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
-import tw.wsa.gaas.java.domain.repository.DuelFieldRepository;
 import tw.wsa.gaas.java.spring.controller.SseController;
+import tw.wsa.gaas.java.spring.controller.view.DuelFieldView;
 
+import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,7 +31,8 @@ public class EventBusImpl implements EventBus {
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(10));
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
     @Override
     public <T> void broadcast(List<T> event) {
@@ -39,8 +43,22 @@ public class EventBusImpl implements EventBus {
                                     .get(duelField.getEntityId().getUuid())
                                     .forEach(sseEmitter -> {
                                         try {
-                                            sseEmitter.send(objectMapper.writeValueAsString(duelField));
-                                        } catch (Exception ex) {
+                                            final DuelFieldView duelFieldView = DuelFieldView
+                                                    .builder()
+                                                    .uuid(duelField.getEntityId().getUuid())
+                                                    .left(duelField.getLeft())
+                                                    .right(duelField.getRight())
+                                                    .phase(duelField.getPhase())
+                                                    .build();
+
+                                            sseEmitter.send(
+                                                    SseEmitter
+                                                            .event()
+                                                            .id(OffsetDateTime.now().toString())
+                                                            .name(String.format("DuelField:%s", duelField.getEntityId().getUuid()))
+                                                            .data(objectMapper.writeValueAsString(duelFieldView))
+                                            );
+                                        } catch (IOException ex) {
                                             sseEmitter.completeWithError(ex);
                                         }
                                     });

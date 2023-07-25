@@ -6,7 +6,6 @@ import tw.wsa.gaas.java.application.adapter.outport.EventBus;
 import tw.wsa.gaas.java.application.adapter.outport.Presenter;
 import tw.wsa.gaas.java.domain.entity.DuelField;
 import tw.wsa.gaas.java.domain.entity.EntityId;
-import tw.wsa.gaas.java.domain.event.DomainEvent;
 import tw.wsa.gaas.java.domain.event.DuelFieldEvent;
 import tw.wsa.gaas.java.domain.repository.DuelFieldRepository;
 import tw.wsa.gaas.java.domain.vo.Duelist;
@@ -14,7 +13,7 @@ import tw.wsa.gaas.java.domain.vo.Zone;
 
 import java.util.AbstractMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class DuelFieldCommandUseCase {
@@ -34,9 +33,6 @@ public class DuelFieldCommandUseCase {
 //    }
 
     public void execute(DuelFieldCommand command, Presenter presenter) {
-        // 查
-        final Optional<DuelField> duelFieldOpt = duelFieldRepository.selectById(EntityId.builder().uuid(command.getUuid()).build());
-
         switch (command.getCommandType()) {
             case JOIN:
                 duelFieldRepository
@@ -47,7 +43,7 @@ public class DuelFieldCommandUseCase {
 
                             duelFieldRepository.save(duelField);
 
-                            eventBus.broadcast(List.of(duelFieldEvent));
+                            eventBus.broadcast(List.of(duelField));
                             return presenter.present(List.of(duelFieldEvent));
                         })
                         // 不存在等待中的對戰場地，創建
@@ -61,22 +57,30 @@ public class DuelFieldCommandUseCase {
                         });
                 break;
             case DRAW_CARD:
-                duelFieldOpt
-                        // 改
+                duelFieldRepository
+                        // 查
+                        .selectById(EntityId.builder().uuid(command.getUuid()).build())
                         .map(duelField -> {
+                            // 改
                             final DuelFieldEvent duelFieldEvent = duelField.drawCard(command.getDuelistName());
 
-                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                            // 存
+                            duelFieldRepository.save(duelField);
+
+                            return Pair.of(duelField, duelFieldEvent);
                         })
-                        // 存
-                        .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
-                        // 推
-                        .flatMap(event -> presenter.present(List.of(event)));
+                        .flatMap(pair -> {
+                            // 推
+                            eventBus.broadcast(List.of(pair.getKey()));
+                            return presenter.present(List.of(pair.getValue()));
+                        });
                 break;
             case SUMMON_MONSTER:
-                duelFieldOpt
-                        // 改
+                duelFieldRepository
+                        // 查
+                        .selectById(EntityId.builder().uuid(command.getUuid()).build())
                         .map(duelField -> {
+                            // 改
                             final DuelFieldEvent duelFieldEvent = duelField.summonMonster(
                                     false,
                                     command.getCardUuid(),
@@ -84,34 +88,46 @@ public class DuelFieldCommandUseCase {
                                     command.getDuelistName()
                             );
 
-                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                            // 存
+                            duelFieldRepository.save(duelField);
+
+                            return Pair.of(duelField, duelFieldEvent);
                         })
-                        // 存
-                        .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
-                        // 推
-                        .flatMap(event -> presenter.present(List.of(event)));
+                        .flatMap(pair -> {
+                            // 推
+                            eventBus.broadcast(List.of(pair.getKey()));
+                            return presenter.present(List.of(pair.getValue()));
+                        });
                 break;
             case APPLY_SPELL:
-                duelFieldOpt
-                        // 改
+                duelFieldRepository
+                        // 查
+                        .selectById(EntityId.builder().uuid(command.getUuid()).build())
                         .map(duelField -> {
+                            // 改
                             final DuelFieldEvent duelFieldEvent = duelField.applySpell(
                                     false,
                                     command.getCardUuid(),
                                     command.getDuelistName()
                             );
 
-                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                            // 存
+                            duelFieldRepository.save(duelField);
+
+                            return Pair.of(duelField, duelFieldEvent);
                         })
-                        // 存
-                        .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
-                        // 推
-                        .flatMap(event -> presenter.present(List.of(event)));
+                        .flatMap(pair -> {
+                            // 推
+                            eventBus.broadcast(List.of(pair.getKey()));
+                            return presenter.present(List.of(pair.getValue()));
+                        });
                 break;
             case COVER_TRAP:
-                duelFieldOpt
-                        // 改
+                duelFieldRepository
+                        // 查
+                        .selectById(EntityId.builder().uuid(command.getUuid()).build())
                         .map(duelField -> {
+                            // 改
                             final DuelFieldEvent duelFieldEvent = duelField.coverTrap(
                                     false,
                                     command.getCardUuid(),
@@ -119,30 +135,47 @@ public class DuelFieldCommandUseCase {
                                     command.getDuelistName()
                             );
 
-                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                            // 存
+                            duelFieldRepository.save(duelField);
+
+                            return Pair.of(duelField, duelFieldEvent);
                         })
-                        // 存
-                        .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
-                        // 推
-                        .flatMap(event -> presenter.present(List.of(event)));
+                        .flatMap(pair -> {
+                            // 推
+                            eventBus.broadcast(List.of(pair.getKey()));
+                            return presenter.present(List.of(pair.getValue()));
+                        });
                 break;
             case START_BATTLE:
-                duelFieldOpt
-                        // 改
+                duelFieldRepository
+                        // 查
+                        .selectById(EntityId.builder().uuid(command.getUuid()).build())
                         .map(duelField -> {
+                            // 改
                             final DuelFieldEvent duelFieldEvent = duelField.startBattle(
                                     false,
                                     command.getCardUuid(),
                                     command.getDuelistName()
                             );
 
-                            return new AbstractMap.SimpleEntry<>(duelFieldEvent, duelField);
+                            // 存
+                            duelFieldRepository.save(duelField);
+
+                            return Pair.of(duelField, duelFieldEvent);
                         })
-                        // 存
-                        .flatMap(eventAndDomain -> duelFieldRepository.save(eventAndDomain.getValue()).map(v -> (DomainEvent) eventAndDomain.getKey()))
-                        // 推
-                        .flatMap(event -> presenter.present(List.of(event)));
+                        .flatMap(pair -> {
+                            // 推
+                            eventBus.broadcast(List.of(pair.getKey()));
+                            return presenter.present(List.of(pair.getValue()));
+                        });
                 break;
+        }
+    }
+
+    private static class Pair {
+
+        public static <T, U> Map.Entry<T, U> of(T first, U second) {
+            return new AbstractMap.SimpleEntry<>(first, second);
         }
     }
 }

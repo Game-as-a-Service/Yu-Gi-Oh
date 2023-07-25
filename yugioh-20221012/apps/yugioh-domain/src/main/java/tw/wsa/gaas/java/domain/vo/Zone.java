@@ -1,5 +1,9 @@
 package tw.wsa.gaas.java.domain.vo;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.vo.card.Card;
 import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
@@ -11,6 +15,10 @@ import tw.wsa.gaas.java.domain.vo.cards.SpellAndTrapCards;
 /**
  * 遊戲區
  */
+@Slf4j
+@Getter
+@EqualsAndHashCode
+@ToString
 public class Zone {
 
     // 玩家
@@ -37,6 +45,7 @@ public class Zone {
         for (int i = 0; i < 6; i++) {
             duelist.drawCards(deck.draw());
         }
+        log.info("");
     }
 
     public void duelistDraw() {
@@ -80,9 +89,5 @@ public class Zone {
             this.monsterCards.moveToGraveYard(monsterCard);
             this.graveYardCards.put(monsterCard);
         }
-    }
-
-    public Duelist getDuelist() {
-        return duelist;
     }
 }

@@ -1,5 +1,8 @@
 package tw.wsa.gaas.java.domain.vo.cards;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import tw.wsa.gaas.java.domain.enu.Attribute;
 import tw.wsa.gaas.java.domain.enu.CardState;
 import tw.wsa.gaas.java.domain.enu.CardType;
@@ -10,6 +13,9 @@ import tw.wsa.gaas.java.domain.vo.card.MonsterCard;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
+@EqualsAndHashCode
+@ToString
 public abstract class Cards {
 
     private static final MonsterCard BlueEyesShiningDragon =
@@ -30,5 +36,10 @@ public abstract class Cards {
     // 上限
     protected Integer limit;
     // 元素
-    protected LinkedList<Card> elements = new LinkedList<>();
+    protected LinkedList<Card> elements;
+
+    public Cards(Integer limit, LinkedList<Card> elements) {
+        this.limit = limit;
+        this.elements = elements;
+    }
 }
